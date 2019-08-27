@@ -15,11 +15,11 @@ import requests
 import datetime
 
 now = datetime.datetime.now()
-temperatureFileName = '/share/temperatures.txt'
-temperatureImageFileName = '/share/temperatures.png'
-humidityFileName = '/share/humidities.txt'
-humidityImageFileName = '/share/humidities.png'
-captureImageFileName = '/share/capture.jpg'
+temperatureFileName = '/share/raspiEyes/temperatures.txt'
+temperatureImageFileName = '/share/raspiEyes/temperatures.png'
+humidityFileName = '/share/raspiEyes/humidities.txt'
+humidityImageFileName = '/share/raspiEyes/humidities.png'
+captureImageFileName = '/share/raspiEyes/capture.jpg'
 
 # pir = MotionSensor(4)
 
