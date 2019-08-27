@@ -1,7 +1,7 @@
 # raspiEyes
-![](images/temperatures.png?raw=true)
-![](images/humidities.png?raw=true)
-![](images/capture.jpg?raw=true)
+![](temperatures.png?raw=true)
+![](humidities.png?raw=true)
+![](capture.jpg?raw=true)
 - Edit crontab
 ```
 sudo nano /etc/crontab
