@@ -52,9 +52,12 @@ temperatureContent = [x.strip() for x in temperatureContent]
 
 temperatureTimeList = []
 temperatureDataList = []
+i = 0
 for e in temperatureContent:
-	temperatureTimeList.append(e.split(',')[0])
-	temperatureDataList.append(e.split(',')[1])
+	if i < 49:
+		temperatureTimeList.append(e.split(',')[0])
+		temperatureDataList.append(e.split(',')[1])
+		i = i + 1
 
 plt.plot(temperatureTimeList, temperatureDataList)
 plt.ylabel('Degrees Celsius')
@@ -77,9 +80,12 @@ humidityContent = [x.strip() for x in humidityContent]
 
 humidityTimeList = []
 humidityDataList = []
+i = 0
 for e in humidityContent:
-	humidityTimeList.append(e.split(',')[0])
-	humidityDataList.append(e.split(',')[1])
+	if i < 49:
+		humidityTimeList.append(e.split(',')[0])
+		humidityDataList.append(e.split(',')[1])
+		i = i + 1
 
 #print(humidityDataList)
 
