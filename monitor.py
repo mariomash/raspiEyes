@@ -107,7 +107,7 @@ def git_push():
 		origin = repo.remote(name='origin')
 		origin.push()
 	except Exception as e:
-		print (e.message, e.args)
+		print (e)
 
 git_push()
 
