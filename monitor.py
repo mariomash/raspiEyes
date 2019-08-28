@@ -15,6 +15,7 @@ import Adafruit_DHT
 import requests
 import datetime
 
+cameraCaptureIsOn = False
 now = datetime.datetime.now()
 temperatureFileName = '/share/raspiEyes/temperatures.txt'
 temperatureImageFileName = '/share/raspiEyes/temperatures.png'
@@ -25,12 +26,12 @@ gitRepoPath = '/share/raspiEyes/'
 gitCommitMessage = f'{now.strftime("%Y-%m-%d %H:%M")}'
 
 # pir = MotionSensor(4)
-
-camera = PiCamera()
-camera.start_preview()
-sleep(5)
-camera.capture(captureImageFileName)
-camera.stop_preview()
+if cameraCaptureIsOn:
+	camera = PiCamera()
+	camera.start_preview()
+	sleep(5)
+	camera.capture(captureImageFileName)
+	camera.stop_preview()
 
 # Attempt to get a sensor reading. The read_retry method will
 # retry up to 15 times, waiting 2 seconds between attempts
