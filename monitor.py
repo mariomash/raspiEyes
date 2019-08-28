@@ -6,6 +6,7 @@
 # https://www.carnivorousplants.co.uk/resources/raspberry-pi-terrarium-controller/
 
 # Imports
+from git import Repo
 from gpiozero import Energenie, MotionSensor
 from picamera import PiCamera
 from matplotlib import pyplot as plt
@@ -20,6 +21,8 @@ temperatureImageFileName = '/share/raspiEyes/temperatures.png'
 humidityFileName = '/share/raspiEyes/humidities.txt'
 humidityImageFileName = '/share/raspiEyes/humidities.png'
 captureImageFileName = '/share/raspiEyes/capture.jpg'
+gitRepoPath = '/share/raspiEyes/'
+gitCommitMessage = f'{now.strftime("%Y-%m-%d %H:%M")}'
 
 # pir = MotionSensor(4)
 
@@ -92,6 +95,19 @@ plt.xticks(rotation=90)
 plt.grid(True)
 plt.savefig(humidityImageFileName, bbox_inches='tight')
 plt.close()
+
+# Let's commit
+def git_push():
+    try:
+        repo = Repo(gitRepoPath)
+        repo.git.add(update=True)
+        repo.index.commit(gitCommitMessage)
+        origin = repo.remote(name='origin')
+        origin.push()
+    except:
+        print('Some error occured while pushing the code')    
+
+git_push()
 
 # If either reading has failed after repeated retries,
 # abort and log message to ThingSpeak
