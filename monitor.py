@@ -15,7 +15,7 @@ import Adafruit_DHT
 import requests
 import datetime
 
-cameraCaptureIsOn = False
+cameraCaptureIsOn = True
 now = datetime.datetime.now()
 temperatureFileName = '/share/raspiEyes/temperatures.txt'
 temperatureImageFileName = '/share/raspiEyes/temperatures.png'
