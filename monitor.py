@@ -38,8 +38,8 @@ if cameraCaptureIsOn:
 sensormodel = Adafruit_DHT.AM2302
 sensorpin = 4
 humidity, temperature = Adafruit_DHT.read_retry(sensormodel, sensorpin)
-humidity = round(humidity, 1)
-temperature = round(temperature, 1)
+humidity = round(humidity, 2)
+temperature = round(temperature, 2)
 
 # Prepare temperature file
 with open(temperatureFileName, 'a') as file:
