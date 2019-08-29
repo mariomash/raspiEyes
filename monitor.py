@@ -15,7 +15,7 @@ import Adafruit_DHT
 import requests
 import datetime
 
-cameraCaptureIsOn = True
+cameraCaptureIsOn = False
 now = datetime.datetime.now()
 temperatureFileName = '/share/raspiEyes/temperatures.txt'
 temperatureImageFileName = '/share/raspiEyes/temperatures.png'
@@ -38,8 +38,8 @@ if cameraCaptureIsOn:
 sensormodel = Adafruit_DHT.AM2302
 sensorpin = 4
 humidity, temperature = Adafruit_DHT.read_retry(sensormodel, sensorpin)
-humidity = round(humidity, 2)
-temperature = round(temperature, 2)
+# humidity = round(humidity, 2)
+# temperature = round(temperature, 2)
 
 # Prepare temperature file
 with open(temperatureFileName, 'a') as file:
