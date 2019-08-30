@@ -16,7 +16,7 @@ import requests
 import datetime
 import random
 
-cameraCaptureIsOn = False
+cameraCaptureIsOn = True
 now = datetime.datetime.now()
 temperatureFileName = '/share/raspiEyes/temperatures.txt'
 temperatureImageFileName = '/share/raspiEyes/temperatures.png'
@@ -25,7 +25,7 @@ humidityImageFileName = '/share/raspiEyes/humidities.png'
 captureImageFileName = '/share/raspiEyes/capture.jpg'
 gitRepoPath = '/share/raspiEyes/'
 gitCommitMessage = f'{now.strftime("%Y-%m-%d %H:%M")}'
-maxDataItems = 30
+maxDataItems = 48
 
 # pir = MotionSensor(4)
 if cameraCaptureIsOn:
@@ -53,7 +53,7 @@ with open(temperatureFileName, 'r') as file:
 
 # you may also want to remove whitespace characters like `\n` at the end of each line
 temperatureContent = [x.strip() for x in temperatureContent]
-
+temperatureContent = reversed(temperatureContent)
 temperatureTimeList = []
 temperatureDataList = []
 i = 0
@@ -63,7 +63,8 @@ for e in temperatureContent:
 		temperatureDataList.append(float(e.split(',')[1]))
 		#temperatureDataList.append(random.random())
 		i = i + 1
-
+# temperatureTimeList = reversed(temperatureTimeList)
+# temperatureDataList = reversed(temperatureDataList)
 plt.plot(temperatureTimeList, temperatureDataList)
 plt.ylabel('Degrees Celsius')
 plt.xlabel('Date')
@@ -82,7 +83,7 @@ with open(humidityFileName, 'r') as file:
 
 # you may also want to remove whitespace characters like `\n` at the end of each line
 humidityContent = [x.strip() for x in humidityContent]
-
+humidityContent = reversed(humidityContent)
 humidityTimeList = []
 humidityDataList = []
 i = 0
@@ -93,7 +94,8 @@ for e in humidityContent:
 		i = i + 1
 
 #print(humidityDataList)
-
+#humidityTimeList = reversed(humidityTimeList)
+#humidityDataList = reversed(humidityDataList)
 plt.plot(humidityTimeList, humidityDataList)
 plt.ylabel('Humidity Percentage')
 plt.xlabel('Date')
