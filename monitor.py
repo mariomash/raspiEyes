@@ -63,8 +63,8 @@ for e in temperatureContent:
 		temperatureDataList.append(float(e.split(',')[1]))
 		#temperatureDataList.append(random.random())
 		i = i + 1
-# temperatureTimeList = reversed(temperatureTimeList)
-# temperatureDataList = reversed(temperatureDataList)
+temperatureTimeList = list(reversed(temperatureTimeList))
+temperatureDataList = list(reversed(temperatureDataList))
 plt.plot(temperatureTimeList, temperatureDataList)
 plt.ylabel('Degrees Celsius')
 plt.xlabel('Date')
@@ -94,8 +94,8 @@ for e in humidityContent:
 		i = i + 1
 
 #print(humidityDataList)
-#humidityTimeList = reversed(humidityTimeList)
-#humidityDataList = reversed(humidityDataList)
+humidityTimeList = list(reversed(humidityTimeList))
+humidityDataList = list(reversed(humidityDataList))
 plt.plot(humidityTimeList, humidityDataList)
 plt.ylabel('Humidity Percentage')
 plt.xlabel('Date')
