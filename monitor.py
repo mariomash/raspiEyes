@@ -25,7 +25,7 @@ humidityImageFileName = '/share/raspiEyes/humidities.png'
 captureImageFileName = '/share/raspiEyes/capture.jpg'
 gitRepoPath = '/share/raspiEyes/'
 gitCommitMessage = f'{now.strftime("%Y-%m-%d %H:%M")}'
-maxDataItems = 48
+maxDataItems = 30
 
 # pir = MotionSensor(4)
 if cameraCaptureIsOn:
