@@ -25,7 +25,7 @@ humidityImageFileName = '/share/raspiEyes/humidities.png'
 captureImageFileName = '/share/raspiEyes/capture.jpg'
 gitRepoPath = '/share/raspiEyes/'
 gitCommitMessage = f'{now.strftime("%Y-%m-%d %H:%M")}'
-maxDataItems = 5
+maxDataItems = 30
 
 # pir = MotionSensor(4)
 if cameraCaptureIsOn:
@@ -93,12 +93,6 @@ for e in humidityContent:
 		i = i + 1
 
 #print(humidityDataList)
-
-humidityTimeList = []
-humidityDataList = []
-for e in humidityContent:
-	humidityTimeList.append(e.split(',')[0])
-	humidityDataList.append(e.split(',')[1])
 
 plt.plot(humidityTimeList, humidityDataList)
 plt.ylabel('Humidity Percentage')
