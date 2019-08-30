@@ -60,8 +60,8 @@ i = 0
 for e in temperatureContent:
 	if i < maxDataItems:
 		temperatureTimeList.append(e.split(',')[0])
-		#temperatureDataList.append(e.split(',')[1])
-		temperatureDataList.append(random.random())
+		temperatureDataList.append(float(e.split(',')[1]))
+		#temperatureDataList.append(random.random())
 		i = i + 1
 
 plt.plot(temperatureTimeList, temperatureDataList)
@@ -89,7 +89,7 @@ i = 0
 for e in humidityContent:
 	if i < maxDataItems:
 		humidityTimeList.append(e.split(',')[0])
-		humidityDataList.append(e.split(',')[1])
+		humidityDataList.append(float(e.split(',')[1]))
 		i = i + 1
 
 #print(humidityDataList)
