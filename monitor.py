@@ -14,6 +14,7 @@ from time import sleep
 import Adafruit_DHT
 import requests
 import datetime
+import random
 
 cameraCaptureIsOn = False
 now = datetime.datetime.now()
@@ -24,6 +25,7 @@ humidityImageFileName = '/share/raspiEyes/humidities.png'
 captureImageFileName = '/share/raspiEyes/capture.jpg'
 gitRepoPath = '/share/raspiEyes/'
 gitCommitMessage = f'{now.strftime("%Y-%m-%d %H:%M")}'
+maxDataItems = 5
 
 # pir = MotionSensor(4)
 if cameraCaptureIsOn:
@@ -38,6 +40,7 @@ if cameraCaptureIsOn:
 sensormodel = Adafruit_DHT.AM2302
 sensorpin = 4
 humidity, temperature = Adafruit_DHT.read_retry(sensormodel, sensorpin)
+
 # humidity = round(humidity, 2)
 # temperature = round(temperature, 2)
 
@@ -55,9 +58,10 @@ temperatureTimeList = []
 temperatureDataList = []
 i = 0
 for e in temperatureContent:
-	if i < 49:
+	if i < maxDataItems:
 		temperatureTimeList.append(e.split(',')[0])
-		temperatureDataList.append(e.split(',')[1])
+		#temperatureDataList.append(e.split(',')[1])
+		temperatureDataList.append(random.random())
 		i = i + 1
 
 plt.plot(temperatureTimeList, temperatureDataList)
@@ -83,7 +87,7 @@ humidityTimeList = []
 humidityDataList = []
 i = 0
 for e in humidityContent:
-	if i < 49:
+	if i < maxDataItems:
 		humidityTimeList.append(e.split(',')[0])
 		humidityDataList.append(e.split(',')[1])
 		i = i + 1
