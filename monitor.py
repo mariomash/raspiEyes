@@ -16,7 +16,7 @@ import requests
 import datetime
 import random
 
-cameraCaptureIsOn = True
+cameraCaptureIsOn = False
 now = datetime.datetime.now()
 temperatureFileName = '/share/raspiEyes/temperatures.txt'
 temperatureImageFileName = '/share/raspiEyes/temperatures.png'
