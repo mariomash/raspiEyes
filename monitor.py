@@ -25,6 +25,7 @@ humidityImageFileName = '/share/raspiEyes/humidities.png'
 captureImageFileName = '/share/raspiEyes/capture.jpg'
 gitRepoPath = '/share/raspiEyes/'
 gitCommitMessage = f'{now.strftime("%Y-%m-%d %H:%M")}'
+mapFileName = 'map.jpg'
 maxDataItems = 30
 
 # pir = MotionSensor(4)
@@ -104,6 +105,9 @@ plt.xticks(rotation=90)
 plt.grid(True)
 plt.savefig(humidityImageFileName, bbox_inches='tight')
 plt.close()
+
+with open(mapFileName, 'wb') as f:
+	f.write(requests.get('https://www.mapquestapi.com/staticmap/v4/getmap?size=600,500&type=map&zoom=7&center={lat},{long}&mcenter={lat},{long}&imagetype=JPEG&key=27OtkDxArEqki7qITqKQbtPgfAtHaWOe').content)
 
 # Let's commit
 def git_push():
