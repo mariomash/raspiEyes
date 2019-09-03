@@ -1,0 +1,60 @@
+{
+  "format": 1,
+  "restore": {
+    "/Volumes/share/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/raspiEyesAndroid.csproj": {}
+  },
+  "projects": {
+    "/Volumes/share/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/raspiEyesAndroid.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Volumes/share/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/raspiEyesAndroid.csproj",
+        "projectName": "raspiEyesAndroid",
+        "projectPath": "/Volumes/share/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/raspiEyesAndroid.csproj",
+        "packagesPath": "/Users/mariomash/.nuget/packages/",
+        "outputPath": "/Volumes/share/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/obj/",
+        "projectStyle": "PackageReference",
+        "skipContentFileWrite": true,
+        "configFilePaths": [
+          "/Users/mariomash/.config/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "monoandroid90"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "monoandroid90": {
+            "projectReferences": {}
+          }
+        }
+      },
+      "frameworks": {
+        "monoandroid90": {
+          "dependencies": {
+            "SharpCifs.Std": {
+              "target": "Package",
+              "version": "[0.2.13, )"
+            },
+            "Xamarin.Android.Support.Core.Utils": {
+              "target": "Package",
+              "version": "[28.0.0.1, )"
+            },
+            "Xamarin.Android.Support.CustomTabs": {
+              "target": "Package",
+              "version": "[28.0.0.1, )"
+            },
+            "Xamarin.Android.Support.Design": {
+              "target": "Package",
+              "version": "[28.0.0.1, )"
+            },
+            "Xamarin.Essentials": {
+              "target": "Package",
+              "version": "[1.3.0, )"
+            }
+          }
+        }
+      }
+    }
+  }
+}
