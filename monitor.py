@@ -15,6 +15,9 @@ import Adafruit_DHT
 import requests
 import datetime
 import random
+from PIL import Image
+from PIL import ImageFont
+from PIL import ImageDraw 
 
 cameraCaptureIsOn = False
 now = datetime.datetime.now()
