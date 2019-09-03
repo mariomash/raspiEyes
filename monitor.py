@@ -79,6 +79,16 @@ plt.grid(True)
 plt.savefig(temperatureImageFileName, bbox_inches='tight')
 plt.close()
 
+img = Image.open(temperatureImageFileName)
+ImageDraw.Draw(
+    img  # Image
+).text(
+    (20, 0),  # Coordinates
+    gitCommitMessage,  # Text
+    (0, 0, 0)  # Color
+)
+img.save(temperatureImageFileName)
+
 # Prepare Humidity File
 with open(humidityFileName, 'a') as file:
 	file.write(f'{now.strftime("%Y-%m-%d %H:%M")},{humidity}\r\n')
@@ -109,6 +119,16 @@ plt.xticks(rotation=90)
 plt.grid(True)
 plt.savefig(humidityImageFileName, bbox_inches='tight')
 plt.close()
+
+img = Image.open(humidityImageFileName)
+ImageDraw.Draw(
+    img  # Image
+).text(
+    (20, 0),  # Coordinates
+    gitCommitMessage,  # Text
+    (0, 0, 0)  # Color
+)
+img.save(humidityImageFileName)
 
 with open(coordinatesFileName, 'r') as file:
 	coordinatesContent = file.readlines()
@@ -142,7 +162,7 @@ img = Image.open(mapFileName)
 ImageDraw.Draw(
     img  # Image
 ).text(
-    (10, 10),  # Coordinates
+    (20, 0),  # Coordinates
     gitCommitMessage,  # Text
     (0, 0, 0)  # Color
 )
