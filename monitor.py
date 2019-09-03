@@ -121,8 +121,7 @@ for e in coordinatesContent:
 	if i < 1:
 		coordinatesTimeList.append(e.split(',')[0])
 		coordinatesLatList.append(float(e.split(',')[1]))
-		coordinatesLongList.append(float(e.split(',')[1]))
-		#temperatureDataList.append(random.random())
+		coordinatesLongList.append(float(e.split(',')[2]))
 		i = i + 1
 coordinatesTimeList = list(reversed(coordinatesTimeList))
 coordinatesLatList = list(reversed(coordinatesLatList))
