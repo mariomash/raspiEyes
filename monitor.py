@@ -162,7 +162,7 @@ img = Image.open(mapFileName)
 ImageDraw.Draw(
     img  # Image
 ).text(
-    (0, 40),  # Coordinates
+    (0, 20),  # Coordinates
     gitCommitMessage,  # Text
     (0, 0, 0)  # Color
 )
