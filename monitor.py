@@ -83,7 +83,7 @@ img = Image.open(temperatureImageFileName)
 ImageDraw.Draw(
     img  # Image
 ).text(
-    (20, 0),  # Coordinates
+    (0, 0),  # Coordinates
     gitCommitMessage,  # Text
     (0, 0, 0)  # Color
 )
@@ -124,7 +124,7 @@ img = Image.open(humidityImageFileName)
 ImageDraw.Draw(
     img  # Image
 ).text(
-    (20, 0),  # Coordinates
+    (0, 0),  # Coordinates
     gitCommitMessage,  # Text
     (0, 0, 0)  # Color
 )
@@ -162,7 +162,7 @@ img = Image.open(mapFileName)
 ImageDraw.Draw(
     img  # Image
 ).text(
-    (20, 0),  # Coordinates
+    (0, 40),  # Coordinates
     gitCommitMessage,  # Text
     (0, 0, 0)  # Color
 )
