@@ -155,7 +155,7 @@ long = coordinatesLongList[0]
 print(f'{lat},{long}')
 
 with open(mapFileName, 'wb') as f:
-	f.write(requests.get(f'https://www.mapquestapi.com/staticmap/v4/getmap?size=1200,1200&type=map&zoom=7&center={lat},{long}&mcenter={lat},{long}&imagetype=JPEG&key=27OtkDxArEqki7qITqKQbtPgfAtHaWOe').content)
+	f.write(requests.get(f'https://www.mapquestapi.com/staticmap/v4/getmap?size=1200,1200&type=map&zoom=8&center={lat},{long}&mcenter={lat},{long}&imagetype=JPEG&key=27OtkDxArEqki7qITqKQbtPgfAtHaWOe').content)
 
 
 img = Image.open(mapFileName)
