@@ -29,6 +29,7 @@ captureImageFileName = '/share/raspiEyes/capture.jpg'
 gitRepoPath = '/share/raspiEyes/'
 gitCommitMessage = f'{now.strftime("%Y-%m-%d %H:%M")}'
 mapFileName = '/share/raspiEyes/map.jpg'
+routeFileName = '/share/raspiEyes/route.jpg'
 coordinatesFileName = '/share/raspiEyes/coordinates.txt'
 maxDataItems = 30
 
@@ -145,7 +146,7 @@ _lat = 0
 _long = 0
 for e in coordinatesContent:
 	if i < maxDataItems and e != '':
-		print(e)
+		# print(e)
 		newLat = float(e.split(',')[1])
 		newLong = float(e.split(',')[2])
 		if newLat != _lat or newLong != _long:
@@ -159,12 +160,13 @@ for e in coordinatesContent:
 coordinatesTimeList = list(reversed(coordinatesTimeList))
 coordinatesLatList = list(reversed(coordinatesLatList))
 coordinatesLongList = list(reversed(coordinatesLongList))
-
+# https://www.mapquestapi.com/staticmap/v4/getmap?size=1200,1200&type=map&zoom=8&center=58.625555,16.34823&mcenter=58.625555,16.34823&imagetype=JPEG&key=27OtkDxArEqki7qITqKQbtPgfAtHaWOe&shape=raw&polyline=fill:0x70ff0000|color:0xff0000|width:2|58.625555,16.34823
+# https://www.mapquestapi.com/staticmap/v5/map?key=27OtkDxArEqki7qITqKQbtPgfAtHaWOe&shape&center=58.625555,16.34823&size=1000,1000&type=hyb&locations=58.625555,16.34823&shape=58.625555,16.34823|58.625555,16.3481783333333
 _lat = coordinatesLatList[0]
 _long = coordinatesLongList[0]
 print(f'{_lat},{_long}')
 #print(coordinatesLatList)
-mapUrl = f'https://www.mapquestapi.com/staticmap/v4/getmap?size=1200,1200&type=map&zoom=8&center={_lat},{_long}&mcenter={_lat},{_long}&imagetype=JPEG&key=27OtkDxArEqki7qITqKQbtPgfAtHaWOe'
+mapUrl = f'https://www.mapquestapi.com/staticmap/v5/map?key=27OtkDxArEqki7qITqKQbtPgfAtHaWOe&shape&size=1000,1000&locations={_lat},{_long}'
 print(mapUrl)
 with open(mapFileName, 'wb') as f:
 	f.write(requests.get(mapUrl).content)
@@ -179,6 +181,27 @@ ImageDraw.Draw(
     (0, 0, 0)  # Color
 )
 img.save(mapFileName)
+
+routeUrl = f'https://www.mapquestapi.com/staticmap/v5/map?key=27OtkDxArEqki7qITqKQbtPgfAtHaWOe&shape&center={_lat},{_long}&size=1000,1000&locations={_lat},{_long}&shape={_lat},{_long}'
+i = 0
+for e in coordinatesTimeList:
+	routeUrl = f'{routeUrl}|{coordinatesLatList[i]},{coordinatesLongList[i]}'
+	i = i + 1
+
+print(routeUrl)
+with open(routeFileName, 'wb') as f:
+	f.write(requests.get(routeUrl).content)
+
+
+img = Image.open(routeFileName)
+ImageDraw.Draw(
+    img  # Image
+).text(
+    (0, 20),  # Coordinates
+    gitCommitMessage,  # Text
+    (0, 0, 0)  # Color
+)
+img.save(routeFileName)
 
 
 # Let's commit
