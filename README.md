@@ -6,7 +6,7 @@
 ![](humidities.png?raw=true)
 ![](route.jpg?raw=true)
 ![](capture.jpg?raw=true)
-![](exsis.jpg?raw=true)
+![](exsis.jpeg?raw=true)
 
 ## Some instructions
 ```
