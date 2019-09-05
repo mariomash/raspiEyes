@@ -166,7 +166,7 @@ _lat = coordinatesLatList[0]
 _long = coordinatesLongList[0]
 print(f'{_lat},{_long}')
 #print(coordinatesLatList)
-mapUrl = f'https://www.mapquestapi.com/staticmap/v5/map?key=27OtkDxArEqki7qITqKQbtPgfAtHaWOe&shape&size=1000,1000&locations={_lat},{_long}'
+mapUrl = f'https://www.mapquestapi.com/staticmap/v5/map?key=27OtkDxArEqki7qITqKQbtPgfAtHaWOe&shape&size=1000,1000&type=hyb&locations={_lat},{_long}'
 print(mapUrl)
 with open(mapFileName, 'wb') as f:
 	f.write(requests.get(mapUrl).content)

@@ -1,7 +1,7 @@
 ﻿<Properties StartupConfiguration="{396B8C99-72EC-46D8-9AEF-6819280B361B}|Default">
   <MonoDevelop.Ide.Workbench ActiveDocument="raspiEyesAndroid/MainActivity.cs">
     <Files>
-      <File FileName="raspiEyesAndroid/MainActivity.cs" Line="30" Column="1" />
+      <File FileName="raspiEyesAndroid/MainActivity.cs" Line="1" Column="1" />
       <File FileName="raspiEyesAndroid/Resources/layout/content_main.xml" />
       <File FileName="raspiEyesAndroid/Resources/layout/activity_main.xml" />
     </Files>
@@ -18,12 +18,6 @@
               <Node name="MainActivity.cs" selected="True" />
             </Node>
           </Node>
-        </State>
-      </Pad>
-      <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State>
-          <Value>dir.GetName()</Value>
-          <Value>file.GetName()</Value>
         </State>
       </Pad>
     </Pads>
