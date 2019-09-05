@@ -254,3 +254,4 @@
 /Volumes/share/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/obj/Release/stamp/_GenerateJavaStubs.stamp
 /Volumes/share/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/obj/Release/stamp/_GeneratePackageManagerJava.stamp
 /Volumes/share/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/obj/Release/stamp/_ResolveLibraryProjectImports.stamp
+/Volumes/share/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/obj/Release/raspiEyesAndroid.csprojAssemblyReference.cache

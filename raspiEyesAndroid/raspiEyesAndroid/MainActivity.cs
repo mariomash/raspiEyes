@@ -27,6 +27,8 @@ namespace raspiEyesAndroid
         LocationManager locationManager;
         string locationProvider;
         System.Timers.Timer Timer;
+        DateTime LastUpdate;
+        TextView infoText;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -37,26 +39,34 @@ namespace raspiEyesAndroid
             Android.Support.V7.Widget.Toolbar toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
             SetSupportActionBar(toolbar);
 
+            infoText = FindViewById<TextView>(Resource.Id.textView1);
+            
+
             FloatingActionButton fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
             fab.Click += FabOnClick;
 
             this.Timer = new System.Timers.Timer();
             // Timer1.Start();
-            this.Timer.Interval = 1000 * 60 * 30; // each 30 minutes
+            this.Timer.Interval = 1000; // each second
             this.Timer.Enabled = true;
             //Timer1.Elapsed += OnTimedEvent;
             this.Timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e) =>
             {
-                // this.Timer.Stop();
-                this.AccessShare();
-                /*
-                RunOnUiThread(() =>
+                this.infoText.Text = this.LastUpdate.ToString();
+                if (this.LastUpdate.AddMinutes(3) < DateTime.Now)
                 {
-                    SetContentView(Resource.Layout.Main);
-                });
-                */
-                //Delete time since it will no longer be used.
-                //this.Timer.Dispose();
+                    // this.Timer.Stop();
+                    this.AccessShare();
+                    /*
+                    RunOnUiThread(() =>
+                    {
+                        SetContentView(Resource.Layout.Main);
+                    });
+                    */
+                    //Delete time since it will no longer be used.
+                    //this.Timer.Dispose();
+                    this.LastUpdate = DateTime.Now;
+                }
             };
             this.Timer.Start();
         }
