@@ -35,6 +35,7 @@ maxDataItems = 30
 # pir = MotionSensor(4)
 if cameraCaptureIsOn:
 	camera = PiCamera()
+	camera.resolution = (1920, 1080)
 	camera.start_preview()
 	sleep(5)
 	camera.capture(captureImageFileName)
@@ -153,9 +154,10 @@ coordinatesLongList = list(reversed(coordinatesLongList))
 lat = coordinatesLatList[0]
 long = coordinatesLongList[0]
 print(f'{lat},{long}')
-
+mapUrl = f'https://www.mapquestapi.com/staticmap/v4/getmap?size=1200,1200&type=map&zoom=8&center={lat},{long}&mcenter={lat},{long}&imagetype=JPEG&key=27OtkDxArEkDxArEqki7qITqKQbtPgfAtHaWOe'
+print(mapUrl)
 with open(mapFileName, 'wb') as f:
-	f.write(requests.get(f'https://www.mapquestapi.com/staticmap/v4/getmap?size=1200,1200&type=map&zoom=8&center={lat},{long}&mcenter={lat},{long}&imagetype=JPEG&key=27OtkDxArEqki7qITqKQbtPgfAtHaWOe').content)
+	f.write(requests.get(mapUrl).content)
 
 
 img = Image.open(mapFileName)
