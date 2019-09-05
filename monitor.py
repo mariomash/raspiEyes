@@ -176,7 +176,7 @@ img = Image.open(mapFileName)
 ImageDraw.Draw(
     img  # Image
 ).text(
-    (0, 20),  # Coordinates
+    (0, 0),  # Coordinates
     gitCommitMessage,  # Text
     (0, 0, 0)  # Color
 )
@@ -197,7 +197,7 @@ img = Image.open(routeFileName)
 ImageDraw.Draw(
     img  # Image
 ).text(
-    (0, 20),  # Coordinates
+    (0, 0),  # Coordinates
     gitCommitMessage,  # Text
     (0, 0, 0)  # Color
 )
