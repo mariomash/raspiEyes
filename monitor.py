@@ -163,7 +163,7 @@ coordinatesLongList = list(reversed(coordinatesLongList))
 _lat = coordinatesLatList[0]
 _long = coordinatesLongList[0]
 print(f'{_lat},{_long}')
-print(coordinatesLatList)
+#print(coordinatesLatList)
 mapUrl = f'https://www.mapquestapi.com/staticmap/v4/getmap?size=1200,1200&type=map&zoom=8&center={_lat},{_long}&mcenter={_lat},{_long}&imagetype=JPEG&key=27OtkDxArEqki7qITqKQbtPgfAtHaWOe'
 print(mapUrl)
 with open(mapFileName, 'wb') as f:
