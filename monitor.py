@@ -141,20 +141,29 @@ coordinatesTimeList = []
 coordinatesLatList = []
 coordinatesLongList = []
 i = 0
+_lat = 0
+_long = 0
 for e in coordinatesContent:
-	if i < 1:
-		coordinatesTimeList.append(e.split(',')[0])
-		coordinatesLatList.append(float(e.split(',')[1]))
-		coordinatesLongList.append(float(e.split(',')[2]))
-		i = i + 1
-coordinatesTimeList = list(reversed(coordinatesTimeList))
-coordinatesLatList = list(reversed(coordinatesLatList))
-coordinatesLongList = list(reversed(coordinatesLongList))
+	if i < maxDataItems and e != '':
+		print(e)
+		newLat = float(e.split(',')[1])
+		newLong = float(e.split(',')[2])
+		if newLat != _lat or newLong != _long:
+			coordinatesTimeList.append(e.split(',')[0])
+			coordinatesLatList.append(newLat)
+			coordinatesLongList.append(newLong)
+			_lat = newLat
+			_long = newLong
+			i = i + 1
+coordinatesTimeList = list(coordinatesTimeList)
+coordinatesLatList = list(coordinatesLatList)
+coordinatesLongList = list(coordinatesLongList)
 
-lat = coordinatesLatList[0]
-long = coordinatesLongList[0]
-print(f'{lat},{long}')
-mapUrl = f'https://www.mapquestapi.com/staticmap/v4/getmap?size=1200,1200&type=map&zoom=8&center={lat},{long}&mcenter={lat},{long}&imagetype=JPEG&key=27OtkDxArEqki7qITqKQbtPgfAtHaWOe'
+#_lat = coordinatesLatList[0]
+#_long = coordinatesLongList[0]
+print(f'{_lat},{_long}')
+print(coordinatesLatList)
+mapUrl = f'https://www.mapquestapi.com/staticmap/v4/getmap?size=1200,1200&type=map&zoom=8&center={_lat},{_long}&mcenter={_lat},{_long}&imagetype=JPEG&key=27OtkDxArEqki7qITqKQbtPgfAtHaWOe'
 print(mapUrl)
 with open(mapFileName, 'wb') as f:
 	f.write(requests.get(mapUrl).content)
