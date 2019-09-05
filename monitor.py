@@ -155,12 +155,13 @@ for e in coordinatesContent:
 			_lat = newLat
 			_long = newLong
 			i = i + 1
-coordinatesTimeList = list(coordinatesTimeList)
-coordinatesLatList = list(coordinatesLatList)
-coordinatesLongList = list(coordinatesLongList)
+			
+coordinatesTimeList = list(reversed(coordinatesTimeList))
+coordinatesLatList = list(reversed(coordinatesLatList))
+coordinatesLongList = list(reversed(coordinatesLongList))
 
-#_lat = coordinatesLatList[0]
-#_long = coordinatesLongList[0]
+_lat = coordinatesLatList[0]
+_long = coordinatesLongList[0]
 print(f'{_lat},{_long}')
 print(coordinatesLatList)
 mapUrl = f'https://www.mapquestapi.com/staticmap/v4/getmap?size=1200,1200&type=map&zoom=8&center={_lat},{_long}&mcenter={_lat},{_long}&imagetype=JPEG&key=27OtkDxArEqki7qITqKQbtPgfAtHaWOe'
