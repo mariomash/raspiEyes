@@ -136,7 +136,7 @@ with open(coordinatesFileName, 'r') as file:
 
 # you may also want to remove whitespace characters like `\n` at the end of each line
 coordinatesContent = [x.strip() for x in coordinatesContent]
-coordinatesContent = reversed(coordinatesContent)
+# coordinatesContent = reversed(coordinatesContent)
 coordinatesTimeList = []
 coordinatesLatList = []
 coordinatesLongList = []
