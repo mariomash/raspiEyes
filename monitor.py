@@ -182,10 +182,10 @@ ImageDraw.Draw(
 )
 img.save(mapFileName)
 
-routeUrl = f'https://www.mapquestapi.com/staticmap/v5/map?key=27OtkDxArEqki7qITqKQbtPgfAtHaWOe&shape&center={_lat},{_long}&size=1000,1000&locations={_lat},{_long}&shape={_lat},{_long}'
+routeUrl = f'https://www.mapquestapi.com/staticmap/v5/map?key=27OtkDxArEqki7qITqKQbtPgfAtHaWOe&shape&size=1000,1000&locations={_lat},{_long}&shape='
 i = 0
 for e in coordinatesTimeList:
-	routeUrl = f'{routeUrl}|{coordinatesLatList[i]},{coordinatesLongList[i]}'
+	routeUrl = f'{routeUrl}{coordinatesLatList[i]},{coordinatesLongList[i]}|'
 	i = i + 1
 
 print(routeUrl)
