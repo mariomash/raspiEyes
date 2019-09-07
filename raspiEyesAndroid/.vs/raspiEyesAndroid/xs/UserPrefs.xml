@@ -1,8 +1,8 @@
 ﻿<Properties StartupConfiguration="{396B8C99-72EC-46D8-9AEF-6819280B361B}|Default">
   <MonoDevelop.Ide.Workbench ActiveDocument="raspiEyesAndroid/Resources/layout/activity_main.xml">
     <Files>
-      <File FileName="raspiEyesAndroid/MainActivity.cs" Line="41" Column="77" />
-      <File FileName="raspiEyesAndroid/Resources/layout/content_main.xml" Line="10" Column="18" />
+      <File FileName="raspiEyesAndroid/MainActivity.cs" Line="41" Column="1" />
+      <File FileName="raspiEyesAndroid/Resources/layout/content_main.xml" />
       <File FileName="raspiEyesAndroid/Resources/layout/activity_main.xml" Line="1" Column="1" />
     </Files>
     <Pads>

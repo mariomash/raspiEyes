@@ -29,6 +29,7 @@ namespace raspiEyesAndroid
         System.Timers.Timer Timer;
         DateTime LastUpdate;
         TextView infoText;
+        Boolean isUpdating;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -39,9 +40,10 @@ namespace raspiEyesAndroid
             Android.Support.V7.Widget.Toolbar toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
             SetSupportActionBar(toolbar);
 
+            isUpdating = false;
+
             infoText = FindViewById<TextView>(Resource.Id.textView1);
             
-
             FloatingActionButton fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
             fab.Click += FabOnClick;
 
@@ -52,9 +54,10 @@ namespace raspiEyesAndroid
             //Timer1.Elapsed += OnTimedEvent;
             this.Timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e) =>
             {
-                this.infoText.Text = this.LastUpdate.ToString();
-                if (this.LastUpdate.AddMinutes(3) < DateTime.Now)
+                if (this.LastUpdate.AddMinutes(30) < DateTime.Now && isUpdating == false)
                 {
+                    isUpdating = true;
+                    this.LastUpdate = DateTime.Now;
                     // this.Timer.Stop();
                     this.AccessShare();
                     /*
@@ -65,7 +68,7 @@ namespace raspiEyesAndroid
                     */
                     //Delete time since it will no longer be used.
                     //this.Timer.Dispose();
-                    this.LastUpdate = DateTime.Now;
+                    isUpdating = false;
                 }
             };
             this.Timer.Start();
@@ -192,6 +195,8 @@ namespace raspiEyesAndroid
                     //Write bytes.
                     writeStream.Write(Encoding.UTF8.GetBytes(coordinates));
                 }
+
+                this.infoText.Text = $"LastUpdate{System.Environment.NewLine}{this.LastUpdate}{System.Environment.NewLine}Lat:{System.Environment.NewLine}{currentLocation.Latitude.ToString()}Long{System.Environment.NewLine}{currentLocation.Longitude.ToString()}";
             }
         }
 
