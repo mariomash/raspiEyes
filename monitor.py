@@ -145,7 +145,7 @@ i = 0
 _lat = 0
 _long = 0
 for e in coordinatesContent:
-	if i < maxDataItems and e != '':
+	if e != '':
 		# print(e)
 		newLat = float(e.split(',')[1])
 		newLong = float(e.split(',')[2])
