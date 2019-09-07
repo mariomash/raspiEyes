@@ -23,7 +23,7 @@ namespace raspiEyesAndroid
     public class MainActivity : AppCompatActivity, ILocationListener
     {
 
-        Location currentLocation;
+        Location currentLocation = null;
         LocationManager locationManager;
         string locationProvider;
         System.Timers.Timer Timer;
@@ -41,35 +41,35 @@ namespace raspiEyesAndroid
             SetSupportActionBar(toolbar);
 
             isUpdating = false;
-
+            LastUpdate = DateTime.Now;
             infoText = FindViewById<TextView>(Resource.Id.textView1);
-            
+
             FloatingActionButton fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
             fab.Click += FabOnClick;
 
             this.Timer = new System.Timers.Timer();
             // Timer1.Start();
-            this.Timer.Interval = 1000; // each second
+            this.Timer.Interval = 5000; // each second
             this.Timer.Enabled = true;
             //Timer1.Elapsed += OnTimedEvent;
             this.Timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e) =>
             {
-                if (this.LastUpdate.AddMinutes(30) < DateTime.Now && isUpdating == false)
+                if (isUpdating == false)
                 {
-                    isUpdating = true;
-                    this.LastUpdate = DateTime.Now;
-                    // this.Timer.Stop();
-                    this.AccessShare();
-                    /*
-                    RunOnUiThread(() =>
+                    if (this.currentLocation != null)
                     {
-                        SetContentView(Resource.Layout.Main);
-                    });
-                    */
+                        RunOnUiThread(() =>
+                        {
+                            this.infoText.Text = $"Last Update:{System.Environment.NewLine}{this.LastUpdate}{System.Environment.NewLine}Lat:{System.Environment.NewLine}{Math.Round(currentLocation.Latitude, 2)}{System.Environment.NewLine}Long:{System.Environment.NewLine}{Math.Round(currentLocation.Longitude, 2)}";
+                        });
+                    }
+
+                    // this.Timer.Stop();
+                    this.StartUpdate();
                     //Delete time since it will no longer be used.
                     //this.Timer.Dispose();
-                    isUpdating = false;
                 }
+
             };
             this.Timer.Start();
         }
@@ -120,7 +120,7 @@ namespace raspiEyesAndroid
             {
                 // You already have permission, so copy your files...
                 InitializeLocationManager();
-                AccessShare();
+                StartUpdate();
                 Snackbar.Make(view, "Coordinates Posted to GitHub", Snackbar.LengthLong)
                     .SetAction("Action", (Android.Views.View.IOnClickListener)null).Show();
             }
@@ -143,7 +143,7 @@ namespace raspiEyesAndroid
                     {
                         // you have permission, you are allowed to read/write to external storage go do it...
                         InitializeLocationManager();
-                        AccessShare();
+                        StartUpdate();
                     }
                     break;
                 default:
@@ -195,13 +195,23 @@ namespace raspiEyesAndroid
                     //Write bytes.
                     writeStream.Write(Encoding.UTF8.GetBytes(coordinates));
                 }
-
-                this.infoText.Text = $"LastUpdate{System.Environment.NewLine}{this.LastUpdate}{System.Environment.NewLine}Lat:{System.Environment.NewLine}{currentLocation.Latitude.ToString()}Long{System.Environment.NewLine}{currentLocation.Longitude.ToString()}";
             }
         }
 
-        private void AccessShare()
+        private void StartUpdate()
         {
+            if (this.LastUpdate.AddMinutes(30) > DateTime.Now && this.currentLocation != null)
+            {
+                return;
+            }
+
+            isUpdating = true;
+
+            RunOnUiThread(() =>
+            {
+                this.infoText.Text = "Updating now";
+            });
+
             //Set Local UDP-Broadcast Port.
             //When using the host name when connecting,
             //Change default local port(137) to a value larger than 1024.
@@ -312,6 +322,9 @@ namespace raspiEyesAndroid
             {
                 Console.WriteLine($"Access Denied");
             }
+
+            this.LastUpdate = DateTime.Now;
+            isUpdating = false;
         }
 
         protected override void OnResume()
@@ -320,7 +333,8 @@ namespace raspiEyesAndroid
             try
             {
                 locationManager.RequestLocationUpdates(locationProvider, 0, 0, this);
-            } catch (Exception)
+            }
+            catch (Exception)
             {
                 Console.WriteLine($"Error OnResume");
             }

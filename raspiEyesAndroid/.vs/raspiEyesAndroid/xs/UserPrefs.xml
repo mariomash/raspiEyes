@@ -1,9 +1,9 @@
 ﻿<Properties StartupConfiguration="{396B8C99-72EC-46D8-9AEF-6819280B361B}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="raspiEyesAndroid/Resources/layout/activity_main.xml">
+  <MonoDevelop.Ide.Workbench>
     <Files>
-      <File FileName="raspiEyesAndroid/MainActivity.cs" Line="41" Column="1" />
-      <File FileName="raspiEyesAndroid/Resources/layout/content_main.xml" />
-      <File FileName="raspiEyesAndroid/Resources/layout/activity_main.xml" Line="1" Column="1" />
+      <File FileName="raspiEyesAndroid/MainActivity.cs" Line="208" Column="1" />
+      <File FileName="raspiEyesAndroid/Resources/layout/content_main.xml" Line="3" Column="4" />
+      <File FileName="raspiEyesAndroid/Resources/layout/activity_main.xml" Line="4" Column="238" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -13,25 +13,30 @@
               <Node name="Assets" expanded="True" />
               <Node name="Properties" expanded="True" />
               <Node name="Resources" expanded="True">
-                <Node name="layout" expanded="True">
-                  <Node name="activity_main.xml" selected="True" />
-                </Node>
+                <Node name="layout" expanded="True" />
               </Node>
+              <Node name="MainActivity.cs" selected="True" />
             </Node>
           </Node>
         </State>
       </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
+      </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" />
-  <MonoDevelop.Ide.ItemProperties.raspiEyesAndroid AndroidDesignerPreferredTheme="AppTheme" AndroidDesignerPreferredDevice="Nexus 4" PreferredExecutionTarget="Android.Android_Accelerated_Oreo" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.raspiEyesAndroid AndroidDesignerPreferredTheme="AppTheme" AndroidDesignerPreferredDevice="Nexus 4" PreferredExecutionTarget="Android.MA037444" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint file="/Volumes/share/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/MainActivity.cs" relfile="raspiEyesAndroid/MainActivity.cs" line="339" column="1" />
-      <Breakpoint file="/Volumes/share/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/MainActivity.cs" relfile="raspiEyesAndroid/MainActivity.cs" line="160" column="1" />
-      <Breakpoint file="/Volumes/share/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/MainActivity.cs" relfile="raspiEyesAndroid/MainActivity.cs" line="155" column="1" />
-      <Breakpoint file="/Volumes/share/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/MainActivity.cs" relfile="raspiEyesAndroid/MainActivity.cs" line="150" column="1" />
+      <Breakpoint file="/Volumes/share/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/MainActivity.cs" relfile="raspiEyesAndroid/MainActivity.cs" line="163" column="1" />
+      <Breakpoint file="/Volumes/share/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/MainActivity.cs" relfile="raspiEyesAndroid/MainActivity.cs" line="158" column="1" />
+      <Breakpoint file="/Volumes/share/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/MainActivity.cs" relfile="raspiEyesAndroid/MainActivity.cs" line="203" column="1" />
+      <Breakpoint file="/Volumes/share/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/MainActivity.cs" relfile="raspiEyesAndroid/MainActivity.cs" line="208" column="1" />
+      <Breakpoint file="/Volumes/share/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/MainActivity.cs" relfile="raspiEyesAndroid/MainActivity.cs" line="326" column="1" />
+      <Breakpoint file="/Volumes/share/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/MainActivity.cs" relfile="raspiEyesAndroid/MainActivity.cs" line="327" column="1" />
+      <Breakpoint file="/Volumes/share/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/MainActivity.cs" relfile="raspiEyesAndroid/MainActivity.cs" line="156" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations />
