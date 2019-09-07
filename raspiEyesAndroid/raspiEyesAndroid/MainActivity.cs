@@ -29,7 +29,6 @@ namespace raspiEyesAndroid
         System.Timers.Timer Timer;
         DateTime LastUpdate;
         TextView infoText;
-        Boolean isUpdating;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -40,7 +39,6 @@ namespace raspiEyesAndroid
             Android.Support.V7.Widget.Toolbar toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
             SetSupportActionBar(toolbar);
 
-            isUpdating = false;
             infoText = FindViewById<TextView>(Resource.Id.textView1);
 
             FloatingActionButton fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
@@ -146,37 +144,36 @@ namespace raspiEyesAndroid
 
         private void GenerateData(SmbFile file)
         {
-            if (currentLocation == null)
+            try
             {
-                Console.WriteLine($"currentLocation is null");
-                locationManager.RequestLocationUpdates(locationProvider, 0, 0, this);
-            }
-            Console.WriteLine($"return? -> {currentLocation}");
-            if (currentLocation == null)
-            {
-                return;
-            }
-
-            var coordinates = "";
-
-            Console.WriteLine($"file?-> {file}");
-            if (file != null)
-            {
-                //Create reading buffer.
-                using (var memStream = new MemoryStream())
+                if (currentLocation == null)
                 {
-                    //Get readable stream.
-                    using (var readStream = file.GetInputStream())
-                    {
-                        //Get bytes.
-                        ((Stream)readStream).CopyTo(memStream);
-                    }
-                    coordinates = Encoding.UTF8.GetString(memStream.ToArray());
+                    Console.WriteLine($"currentLocation is null");
+                    locationManager.RequestLocationUpdates(locationProvider, 0, 0, this);
+                }
+                Console.WriteLine($"return? -> {currentLocation}");
+                if (currentLocation == null)
+                {
+                    return;
                 }
 
-                var arr = coordinates.Split(',');
-                if (arr[arr.Length - 2] != currentLocation.Latitude.ToString() && arr[arr.Length - 1] != currentLocation.Longitude.ToString())
+                var coordinates = "";
+
+                Console.WriteLine($"file?-> {file}");
+                if (file != null)
                 {
+                    //Create reading buffer.
+                    using (var memStream = new MemoryStream())
+                    {
+                        //Get readable stream.
+                        using (var readStream = file.GetInputStream())
+                        {
+                            //Get bytes.
+                            ((Stream)readStream).CopyTo(memStream);
+                        }
+                        coordinates = Encoding.UTF8.GetString(memStream.ToArray());
+                    }
+
                     coordinates = $"{coordinates}{System.Environment.NewLine}{DateTime.Now:yyyy/MM/dd HH:mm},{currentLocation.Latitude.ToString()},{currentLocation.Longitude.ToString()}";
                     Console.WriteLine($"coordinates?-> {coordinates}");
                     //Get writable stream.
@@ -185,17 +182,20 @@ namespace raspiEyesAndroid
                         //Write bytes.
                         writeStream.Write(Encoding.UTF8.GetBytes(coordinates));
                     }
+
+                    this.LastUpdate = DateTime.Now;
+                    this.infoText.Text = $"Last Update:{System.Environment.NewLine}{this.LastUpdate}{System.Environment.NewLine}Lat:{System.Environment.NewLine}{Math.Round(currentLocation.Latitude, 4)}{System.Environment.NewLine}Long:{System.Environment.NewLine}{Math.Round(currentLocation.Longitude, 4)}";
                 }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine($"errot gen data");
             }
         }
 
         private void StartUpdate()
         {
-            isUpdating = true;
-            RunOnUiThread(() =>
-            {
-                this.infoText.Text = "Updating now";
-            });
+            this.infoText.Text = "Updating now";
 
             //Set Local UDP-Broadcast Port.
             //When using the host name when connecting,
@@ -307,14 +307,6 @@ namespace raspiEyesAndroid
             {
                 Console.WriteLine($"Access Denied");
             }
-
-            this.LastUpdate = DateTime.Now;
-            RunOnUiThread(() =>
-            {
-                this.infoText.Text = $"Last Update:{System.Environment.NewLine}{this.LastUpdate}{System.Environment.NewLine}Lat:{System.Environment.NewLine}{Math.Round(currentLocation.Latitude, 4)}{System.Environment.NewLine}Long:{System.Environment.NewLine}{Math.Round(currentLocation.Longitude, 4)}";
-            });
-
-            isUpdating = false;
         }
 
         protected override void OnResume()
