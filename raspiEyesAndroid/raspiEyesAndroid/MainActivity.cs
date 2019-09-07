@@ -41,7 +41,6 @@ namespace raspiEyesAndroid
             SetSupportActionBar(toolbar);
 
             isUpdating = false;
-            LastUpdate = DateTime.Now;
             infoText = FindViewById<TextView>(Resource.Id.textView1);
 
             FloatingActionButton fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
@@ -49,31 +48,19 @@ namespace raspiEyesAndroid
 
             this.Timer = new System.Timers.Timer();
             // Timer1.Start();
-            this.Timer.Interval = 1000 * 60; // each minute
+            this.Timer.Interval = 1000 * 60 * 30; // each 30 minutes
             this.Timer.Enabled = true;
             //Timer1.Elapsed += OnTimedEvent;
             this.Timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e) =>
             {
-                if (this.currentLocation != null)
-                {
-                    RunOnUiThread(() =>
-                    {
-                        this.infoText.Text = $"Last Update:{System.Environment.NewLine}{this.LastUpdate}{System.Environment.NewLine}Lat:{System.Environment.NewLine}{Math.Round(currentLocation.Latitude, 4)}{System.Environment.NewLine}Long:{System.Environment.NewLine}{Math.Round(currentLocation.Longitude, 4)}";
-                    });
-                }
-
-                if (this.LastUpdate.AddMinutes(30) > DateTime.Now)
-                {
-                    this.StartUpdate();
-                }
+                Console.WriteLine("Starting Update");
+                this.StartUpdate();
 
                 // this.Timer.Stop();
                 //Delete time since it will no longer be used.
                 //this.Timer.Dispose();
 
             };
-            InitializeLocationManager();
-            this.StartUpdate();
             this.Timer.Start();
         }
 
@@ -127,6 +114,10 @@ namespace raspiEyesAndroid
                 Snackbar.Make(view, "Coordinates Posted to GitHub", Snackbar.LengthLong)
                     .SetAction("Action", (Android.Views.View.IOnClickListener)null).Show();
             }
+            else
+            {
+                ActivityCompat.RequestPermissions(this, PermissionsLocation, 999);
+            }
 
             if (ActivityCompat.ShouldShowRequestPermissionRationale(this, locationPermission))
             {
@@ -134,7 +125,6 @@ namespace raspiEyesAndroid
                 Toast.MakeText(this, "Will need permission to location", ToastLength.Long).Show();
                 return;
             }
-            ActivityCompat.RequestPermissions(this, PermissionsLocation, 999);
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
@@ -201,11 +191,6 @@ namespace raspiEyesAndroid
 
         private void StartUpdate()
         {
-            if (this.isUpdating == true)
-            {
-                return;
-            }
-
             isUpdating = true;
             RunOnUiThread(() =>
             {
@@ -324,6 +309,10 @@ namespace raspiEyesAndroid
             }
 
             this.LastUpdate = DateTime.Now;
+            RunOnUiThread(() =>
+            {
+                this.infoText.Text = $"Last Update:{System.Environment.NewLine}{this.LastUpdate}{System.Environment.NewLine}Lat:{System.Environment.NewLine}{Math.Round(currentLocation.Latitude, 4)}{System.Environment.NewLine}Long:{System.Environment.NewLine}{Math.Round(currentLocation.Longitude, 4)}";
+            });
 
             isUpdating = false;
         }
