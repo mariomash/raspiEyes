@@ -49,28 +49,31 @@ namespace raspiEyesAndroid
 
             this.Timer = new System.Timers.Timer();
             // Timer1.Start();
-            this.Timer.Interval = 5000; // each second
+            this.Timer.Interval = 1000 * 60; // each minute
             this.Timer.Enabled = true;
             //Timer1.Elapsed += OnTimedEvent;
             this.Timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e) =>
             {
-                if (isUpdating == false)
+                if (this.currentLocation != null)
                 {
-                    if (this.currentLocation != null)
+                    RunOnUiThread(() =>
                     {
-                        RunOnUiThread(() =>
-                        {
-                            this.infoText.Text = $"Last Update:{System.Environment.NewLine}{this.LastUpdate}{System.Environment.NewLine}Lat:{System.Environment.NewLine}{Math.Round(currentLocation.Latitude, 2)}{System.Environment.NewLine}Long:{System.Environment.NewLine}{Math.Round(currentLocation.Longitude, 2)}";
-                        });
-                    }
-
-                    // this.Timer.Stop();
-                    this.StartUpdate();
-                    //Delete time since it will no longer be used.
-                    //this.Timer.Dispose();
+                        this.infoText.Text = $"Last Update:{System.Environment.NewLine}{this.LastUpdate}{System.Environment.NewLine}Lat:{System.Environment.NewLine}{Math.Round(currentLocation.Latitude, 4)}{System.Environment.NewLine}Long:{System.Environment.NewLine}{Math.Round(currentLocation.Longitude, 4)}";
+                    });
                 }
 
+                if (this.LastUpdate.AddMinutes(30) > DateTime.Now)
+                {
+                    this.StartUpdate();
+                }
+
+                // this.Timer.Stop();
+                //Delete time since it will no longer be used.
+                //this.Timer.Dispose();
+
             };
+            InitializeLocationManager();
+            this.StartUpdate();
             this.Timer.Start();
         }
 
@@ -155,6 +158,7 @@ namespace raspiEyesAndroid
         {
             if (currentLocation == null)
             {
+                Console.WriteLine($"currentLocation is null");
                 locationManager.RequestLocationUpdates(locationProvider, 0, 0, this);
             }
             Console.WriteLine($"return? -> {currentLocation}");
@@ -180,33 +184,29 @@ namespace raspiEyesAndroid
                     coordinates = Encoding.UTF8.GetString(memStream.ToArray());
                 }
 
-                //Get the SmbFile specifying the file name to be created.
-                // var file = new SmbFile("smb://UserName:Password@ServerIP/ShareName/Folder/NewFileName.txt");
-
-                //Create file.
-                //file.CreateNewFile();
-                coordinates = $"{coordinates}{System.Environment.NewLine}{DateTime.Now:yyyy/MM/dd HH:mm},{currentLocation.Latitude.ToString()},{currentLocation.Longitude.ToString()}";
-
-                Console.WriteLine($"coordinates?-> {coordinates}");
-
-                //Get writable stream.
-                using (var writeStream = file.GetOutputStream())
+                var arr = coordinates.Split(',');
+                if (arr[arr.Length - 2] != currentLocation.Latitude.ToString() && arr[arr.Length - 1] != currentLocation.Longitude.ToString())
                 {
-                    //Write bytes.
-                    writeStream.Write(Encoding.UTF8.GetBytes(coordinates));
+                    coordinates = $"{coordinates}{System.Environment.NewLine}{DateTime.Now:yyyy/MM/dd HH:mm},{currentLocation.Latitude.ToString()},{currentLocation.Longitude.ToString()}";
+                    Console.WriteLine($"coordinates?-> {coordinates}");
+                    //Get writable stream.
+                    using (var writeStream = file.GetOutputStream())
+                    {
+                        //Write bytes.
+                        writeStream.Write(Encoding.UTF8.GetBytes(coordinates));
+                    }
                 }
             }
         }
 
         private void StartUpdate()
         {
-            if (this.LastUpdate.AddMinutes(30) > DateTime.Now && this.currentLocation != null)
+            if (this.isUpdating == true)
             {
                 return;
             }
 
             isUpdating = true;
-
             RunOnUiThread(() =>
             {
                 this.infoText.Text = "Updating now";
@@ -324,6 +324,7 @@ namespace raspiEyesAndroid
             }
 
             this.LastUpdate = DateTime.Now;
+
             isUpdating = false;
         }
 
