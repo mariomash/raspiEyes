@@ -156,7 +156,7 @@ for e in coordinatesContent:
 			_lat = newLat
 			_long = newLong
 			i = i + 1
-			
+
 coordinatesTimeList = list(reversed(coordinatesTimeList))
 coordinatesLatList = list(reversed(coordinatesLatList))
 coordinatesLongList = list(reversed(coordinatesLongList))
@@ -182,7 +182,7 @@ ImageDraw.Draw(
 )
 img.save(mapFileName)
 
-routeUrl = f'https://www.mapquestapi.com/staticmap/v5/map?key=27OtkDxArEqki7qITqKQbtPgfAtHaWOe&shape&size=1000,1000&locations={_lat},{_long}&shape='
+routeUrl = f'https://www.mapquestapi.com/staticmap/v5/map?key=27OtkDxArEqki7qITqKQbtPgfAtHaWOe&shape&size=1500,1500&locations={_lat},{_long}&shape='
 i = 0
 for e in coordinatesTimeList:
 	routeUrl = f'{routeUrl}{coordinatesLatList[i]},{coordinatesLongList[i]}|'
