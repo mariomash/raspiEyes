@@ -64,7 +64,9 @@ namespace raspiEyesAndroid
 
             };
             Console.WriteLine("Updating now");
-            this.StartUpdate();
+            InitializeLocationManager();
+            locationManager.RequestLocationUpdates(locationProvider, 0, 0, this);
+            StartUpdate();
             this.Timer.Start();
         }
 
@@ -82,7 +84,7 @@ namespace raspiEyesAndroid
                 {
                     locationProvider = string.Empty;
                 }
-                Console.WriteLine($"Using {locationProvider}");
+                this.infoText.Text = "Using {locationProvider}";
             }
         }
 
@@ -152,16 +154,13 @@ namespace raspiEyesAndroid
         {
             try
             {
+                locationManager.RequestLocationUpdates(locationProvider, 0, 0, this);
                 if (currentLocation == null)
                 {
-                    Console.WriteLine($"currentLocation is null");
-                    locationManager.RequestLocationUpdates(locationProvider, 0, 0, this);
-                }
-                Console.WriteLine($"return? -> {currentLocation}");
-                if (currentLocation == null)
-                {
+                    this.infoText.Text = "Location is null";
                     return;
                 }
+                Console.WriteLine($"return? -> {currentLocation}");
 
                 var coordinates = "";
 
