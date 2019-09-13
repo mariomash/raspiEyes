@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Volumes/share/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/raspiEyesAndroid.csproj": {}
+    "/Users/mariomash/Desktop/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/raspiEyesAndroid.csproj": {}
   },
   "projects": {
-    "/Volumes/share/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/raspiEyesAndroid.csproj": {
+    "/Users/mariomash/Desktop/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/raspiEyesAndroid.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Volumes/share/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/raspiEyesAndroid.csproj",
+        "projectUniqueName": "/Users/mariomash/Desktop/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/raspiEyesAndroid.csproj",
         "projectName": "raspiEyesAndroid",
-        "projectPath": "/Volumes/share/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/raspiEyesAndroid.csproj",
+        "projectPath": "/Users/mariomash/Desktop/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/raspiEyesAndroid.csproj",
         "packagesPath": "/Users/mariomash/.nuget/packages/",
-        "outputPath": "/Volumes/share/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/obj/",
+        "outputPath": "/Users/mariomash/Desktop/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/obj/",
         "projectStyle": "PackageReference",
         "skipContentFileWrite": true,
         "configFilePaths": [
