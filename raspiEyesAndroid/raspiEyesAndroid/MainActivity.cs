@@ -46,12 +46,16 @@ namespace raspiEyesAndroid
 
             this.Timer = new System.Timers.Timer();
             // Timer1.Start();
+#if DEBUG
+            this.Timer.Interval = 1000 * 30; // each 30 seconds
+#else
             this.Timer.Interval = 1000 * 60 * 30; // each 30 minutes
+#endif
             this.Timer.Enabled = true;
             //Timer1.Elapsed += OnTimedEvent;
             this.Timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e) =>
             {
-                Console.WriteLine("Starting Update");
+                Console.WriteLine("Updating now");
                 this.StartUpdate();
 
                 // this.Timer.Stop();
@@ -59,6 +63,8 @@ namespace raspiEyesAndroid
                 //this.Timer.Dispose();
 
             };
+            Console.WriteLine("Updating now");
+            this.StartUpdate();
             this.Timer.Start();
         }
 
