@@ -23,6 +23,7 @@ cameraCaptureIsOn = False
 now = datetime.datetime.now()
 temperatureFileName = '/share/raspiEyes/temperatures.txt'
 temperatureImageFileName = '/share/raspiEyes/temperatures.png'
+fullTemperatureImageFileName = '/share/raspiEyes/temperatures.png'
 humidityFileName = '/share/raspiEyes/humidities.txt'
 humidityImageFileName = '/share/raspiEyes/humidities.png'
 captureImageFileName = '/share/raspiEyes/capture.jpg'
@@ -63,13 +64,20 @@ temperatureContent = [x.strip() for x in temperatureContent]
 temperatureContent = reversed(temperatureContent)
 temperatureTimeList = []
 temperatureDataList = []
+fullTemperatureTimeList = []
+fullTemperatureDataList = []
 i = 0
 for e in temperatureContent:
 	if i < maxDataItems:
 		temperatureTimeList.append(e.split(',')[0])
 		temperatureDataList.append(float(e.split(',')[1]))
 		#temperatureDataList.append(random.random())
-		i = i + 1
+	if i == 0 or i == len(temperatureContent)
+		fullTemperatureTimeList.append(e.split(',')[0])
+	else
+		fullTemperatureTimeList.append('')
+	fullTemperatureDataList.append(float(e.split(',')[1]))
+	i = i + 1
 temperatureTimeList = list(reversed(temperatureTimeList))
 temperatureDataList = list(reversed(temperatureDataList))
 plt.plot(temperatureTimeList, temperatureDataList)
