@@ -72,14 +72,17 @@ for e in temperatureContent:
 		temperatureTimeList.append(e.split(',')[0])
 		temperatureDataList.append(float(e.split(',')[1]))
 		#temperatureDataList.append(random.random())
-	if i == 0 or i == len(temperatureContent)
+	if i == 0 or i == len(list(temperatureContent)) - 1:
 		fullTemperatureTimeList.append(e.split(',')[0])
-	else
+	else:
 		fullTemperatureTimeList.append('')
 	fullTemperatureDataList.append(float(e.split(',')[1]))
 	i = i + 1
+fullTemperatureTimeList = list(reversed(fullTemperatureTimeList))
+fullTemperatureDataList = list(reversed(fullTemperatureDataList))
 temperatureTimeList = list(reversed(temperatureTimeList))
 temperatureDataList = list(reversed(temperatureDataList))
+
 plt.plot(temperatureTimeList, temperatureDataList)
 plt.ylabel('Degrees Celsius')
 plt.xlabel('Date')
@@ -87,6 +90,15 @@ plt.title('Temperature')
 plt.xticks(rotation=90)
 plt.grid(True)
 plt.savefig(temperatureImageFileName, bbox_inches='tight')
+plt.close()
+
+plt.plot(fullTemperatureTimeList, fullTemperatureTimeList)
+plt.ylabel('Degrees Celsius')
+plt.xlabel('Date')
+plt.title('Temperature')
+plt.xticks(rotation=90)
+plt.grid(True)
+plt.savefig(fullTemperatureImageFileName, bbox_inches='tight')
 plt.close()
 
 img = Image.open(temperatureImageFileName)
@@ -98,6 +110,16 @@ ImageDraw.Draw(
     (0, 0, 0)  # Color
 )
 img.save(temperatureImageFileName)
+
+img = Image.open(fullTemperatureImageFileName)
+ImageDraw.Draw(
+    img  # Image
+).text(
+    (0, 0),  # Coordinates
+    gitCommitMessage,  # Text
+    (0, 0, 0)  # Color
+)
+img.save(fullTemperatureImageFileName)
 
 # Prepare Humidity File
 with open(humidityFileName, 'a') as file:
