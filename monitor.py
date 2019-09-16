@@ -49,8 +49,8 @@ sensormodel = Adafruit_DHT.AM2302
 sensorpin = 4
 humidity, temperature = Adafruit_DHT.read_retry(sensormodel, sensorpin)
 
-print(f'current humidity: {humidity})
-print(f'current temperature: {temperature})
+print(f'current humidity: {humidity}')
+print(f'current temperature: {temperature}')
 
 # humidity = round(humidity, 2)
 # temperature = round(temperature, 2)
@@ -66,11 +66,24 @@ with open(temperatureFileName, 'r') as file:
 temperatureContent = [x.strip() for x in temperatureContent]
 temperatureContent = reversed(temperatureContent)
 
+temperatureTimeList = []
+temperatureDataList = []
+i = 0
+for e in temperatureContent:
+	print(e)
+	if i < maxDataItems:
+		temperatureTimeList.append(e.split(',')[0])
+		temperatureDataList.append(float(e.split(',')[1]))
+		i = i + 1
+
+temperatureTimeList = list(reversed(temperatureTimeList))
+temperatureDataList = list(reversed(temperatureDataList))
+
 fullTemperatureTimeList = []
 fullTemperatureDataList = []
 i = 0
 for e in temperatureContent:
-	if i == 0 or i == len(list(temperatureContent)) - 1:
+	if i == 0:
 		fullTemperatureTimeList.append(e.split(',')[0])
 	else:
 		fullTemperatureTimeList.append('')
@@ -79,18 +92,6 @@ for e in temperatureContent:
 
 fullTemperatureTimeList = list(reversed(fullTemperatureTimeList))
 fullTemperatureDataList = list(reversed(fullTemperatureDataList))
-
-temperatureTimeList = []
-temperatureDataList = []
-i = 0
-for e in temperatureContent:
-	if i < maxDataItems:
-		temperatureTimeList.append(e.split(',')[0])
-		temperatureDataList.append(float(e.split(',')[1]))
-		i = i + 1
-
-temperatureTimeList = list(reversed(temperatureTimeList))
-temperatureDataList = list(reversed(temperatureDataList))
 
 plt.plot(temperatureTimeList, temperatureDataList)
 plt.ylabel('Degrees Celsius')
@@ -203,9 +204,9 @@ coordinatesLongList = list(reversed(coordinatesLongList))
 # https://www.mapquestapi.com/staticmap/v5/map?key=27OtkDxArEqki7qITqKQbtPgfAtHaWOe&shape&center=58.625555,16.34823&size=1000,1000&type=hyb&locations=58.625555,16.34823&shape=58.625555,16.34823|58.625555,16.3481783333333
 _lat = coordinatesLatList[0]
 _long = coordinatesLongList[0]
-print(f'{_lat},{_long}')
+print(f'Current Position: {_lat},{_long}')
 mapUrl = f'https://www.mapquestapi.com/staticmap/v5/map?key=27OtkDxArEqki7qITqKQbtPgfAtHaWOe&shape&size=1000,1000&type=hyb&locations={_lat},{_long}'
-print(mapUrl)
+print(f'Route Map URL: {mapUrl}')
 with open(mapFileName, 'wb') as f:
 	f.write(requests.get(mapUrl).content)
 
