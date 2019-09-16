@@ -23,7 +23,7 @@ cameraCaptureIsOn = False
 now = datetime.datetime.now()
 temperatureFileName = '/share/raspiEyes/temperatures.txt'
 temperatureImageFileName = '/share/raspiEyes/temperatures.png'
-fullTemperatureImageFileName = '/share/raspiEyes/full_temperatures.png'
+fullTemperatureImageFileName = '/share/raspiEyes/fulltemperatures.png'
 humidityFileName = '/share/raspiEyes/humidities.txt'
 humidityImageFileName = '/share/raspiEyes/humidities.png'
 captureImageFileName = '/share/raspiEyes/capture.jpg'
@@ -89,11 +89,11 @@ fullTemperatureTimeList = []
 fullTemperatureDataList = []
 i = 0
 for e in temperatureContent:
-	fullTemperatureTimeList.append(e.split(',')[0])
-#	if i == 0 or i == len(list(temperatureContent)) - 1:
-#		fullTemperatureTimeList.append(e.split(',')[0])
-#	else:
-#		fullTemperatureTimeList.append('')
+	# fullTemperatureTimeList.append(e.split(',')[0])
+	if i == 0:
+		fullTemperatureTimeList.append(e.split(',')[0])
+	else:
+		fullTemperatureTimeList.append(' ')
 	fullTemperatureDataList.append(float(e.split(',')[1]))
 	i = i + 1
 
