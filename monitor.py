@@ -49,6 +49,9 @@ sensormodel = Adafruit_DHT.AM2302
 sensorpin = 4
 humidity, temperature = Adafruit_DHT.read_retry(sensormodel, sensorpin)
 
+print(f'current humidity: {humidity})
+print(f'current temperature: {temperature})
+
 # humidity = round(humidity, 2)
 # temperature = round(temperature, 2)
 
@@ -62,24 +65,30 @@ with open(temperatureFileName, 'r') as file:
 # you may also want to remove whitespace characters like `\n` at the end of each line
 temperatureContent = [x.strip() for x in temperatureContent]
 temperatureContent = reversed(temperatureContent)
-temperatureTimeList = []
-temperatureDataList = []
+
 fullTemperatureTimeList = []
 fullTemperatureDataList = []
 i = 0
 for e in temperatureContent:
-	if i < maxDataItems:
-		temperatureTimeList.append(e.split(',')[0])
-		temperatureDataList.append(float(e.split(',')[1]))
-		#temperatureDataList.append(random.random())
 	if i == 0 or i == len(list(temperatureContent)) - 1:
 		fullTemperatureTimeList.append(e.split(',')[0])
 	else:
 		fullTemperatureTimeList.append('')
 	fullTemperatureDataList.append(float(e.split(',')[1]))
 	i = i + 1
+
 fullTemperatureTimeList = list(reversed(fullTemperatureTimeList))
 fullTemperatureDataList = list(reversed(fullTemperatureDataList))
+
+temperatureTimeList = []
+temperatureDataList = []
+i = 0
+for e in temperatureContent:
+	if i < maxDataItems:
+		temperatureTimeList.append(e.split(',')[0])
+		temperatureDataList.append(float(e.split(',')[1]))
+		i = i + 1
+
 temperatureTimeList = list(reversed(temperatureTimeList))
 temperatureDataList = list(reversed(temperatureDataList))
 
@@ -92,7 +101,7 @@ plt.grid(True)
 plt.savefig(temperatureImageFileName, bbox_inches='tight')
 plt.close()
 
-plt.plot(fullTemperatureTimeList, fullTemperatureTimeList)
+plt.plot(fullTemperatureTimeList, fullTemperatureDataList)
 plt.ylabel('Degrees Celsius')
 plt.xlabel('Date')
 plt.title('Temperature')
@@ -195,7 +204,6 @@ coordinatesLongList = list(reversed(coordinatesLongList))
 _lat = coordinatesLatList[0]
 _long = coordinatesLongList[0]
 print(f'{_lat},{_long}')
-#print(coordinatesLatList)
 mapUrl = f'https://www.mapquestapi.com/staticmap/v5/map?key=27OtkDxArEqki7qITqKQbtPgfAtHaWOe&shape&size=1000,1000&type=hyb&locations={_lat},{_long}'
 print(mapUrl)
 with open(mapFileName, 'wb') as f:
