@@ -70,7 +70,6 @@ temperatureTimeList = []
 temperatureDataList = []
 i = 0
 for e in temperatureContent:
-	print(e)
 	if i < maxDataItems:
 		temperatureTimeList.append(e.split(',')[0])
 		temperatureDataList.append(float(e.split(',')[1]))
@@ -83,10 +82,7 @@ fullTemperatureTimeList = []
 fullTemperatureDataList = []
 i = 0
 for e in temperatureContent:
-	if i == 0:
-		fullTemperatureTimeList.append(e.split(',')[0])
-	else:
-		fullTemperatureTimeList.append('')
+	fullTemperatureTimeList.append(e.split(',')[0])
 	fullTemperatureDataList.append(float(e.split(',')[1]))
 	i = i + 1
 
