@@ -89,11 +89,7 @@ fullTemperatureTimeList = []
 fullTemperatureDataList = []
 i = 0
 for e in temperatureContent:
-	# fullTemperatureTimeList.append(e.split(',')[0])
-	if i == 0:
-		fullTemperatureTimeList.append(e.split(',')[0])
-	else:
-		fullTemperatureTimeList.append(' ')
+	fullTemperatureTimeList.append(e.split(',')[0])
 	fullTemperatureDataList.append(float(e.split(',')[1]))
 	i = i + 1
 
