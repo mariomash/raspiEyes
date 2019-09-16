@@ -78,13 +78,6 @@ for e in temperatureContent:
 temperatureTimeList = list(reversed(temperatureTimeList))
 temperatureDataList = list(reversed(temperatureDataList))
 
-with open(temperatureFileName, 'r') as file:
-	temperatureContent = file.readlines()
-
-# you may also want to remove whitespace characters like `\n` at the end of each line
-temperatureContent = [x.strip() for x in temperatureContent]
-temperatureContent = reversed(temperatureContent)
-
 fullTemperatureTimeList = []
 fullTemperatureDataList = []
 i = 0
