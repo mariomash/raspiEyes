@@ -78,15 +78,22 @@ for e in temperatureContent:
 temperatureTimeList = list(reversed(temperatureTimeList))
 temperatureDataList = list(reversed(temperatureDataList))
 
+with open(temperatureFileName, 'r') as file:
+	temperatureContent = file.readlines()
+
+# you may also want to remove whitespace characters like `\n` at the end of each line
+temperatureContent = [x.strip() for x in temperatureContent]
+temperatureContent = reversed(temperatureContent)
+
 fullTemperatureTimeList = []
 fullTemperatureDataList = []
 i = 0
-print(temperatureContent)
 for e in temperatureContent:
-	if i == 0 or i == len(list(temperatureContent)) - 1:
-		fullTemperatureTimeList.append(e.split(',')[0])
-	else:
-		fullTemperatureTimeList.append('')
+	fullTemperatureTimeList.append(e.split(',')[0])
+#	if i == 0 or i == len(list(temperatureContent)) - 1:
+#		fullTemperatureTimeList.append(e.split(',')[0])
+#	else:
+#		fullTemperatureTimeList.append('')
 	fullTemperatureDataList.append(float(e.split(',')[1]))
 	i = i + 1
 
