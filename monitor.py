@@ -81,8 +81,12 @@ temperatureDataList = list(reversed(temperatureDataList))
 fullTemperatureTimeList = []
 fullTemperatureDataList = []
 i = 0
+print(temperatureContent)
 for e in temperatureContent:
-	fullTemperatureTimeList.append(e.split(',')[0])
+	if i == 0 or i == len(list(temperatureContent)) - 1:
+		fullTemperatureTimeList.append(e.split(',')[0])
+	else:
+		fullTemperatureTimeList.append('')
 	fullTemperatureDataList.append(float(e.split(',')[1]))
 	i = i + 1
 
