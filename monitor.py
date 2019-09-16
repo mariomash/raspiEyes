@@ -105,9 +105,13 @@ plt.close()
 plt.plot(fullTemperatureTimeList, fullTemperatureDataList)
 plt.ylabel('Degrees Celsius')
 plt.xlabel('Date')
+
+fig, ax = plt.subplots(1)
+ax.xaxis.grid(False)
+plt.grid()
+
 plt.title('Temperature')
 plt.xticks(rotation=90)
-plt.grid(True)
 plt.savefig(fullTemperatureImageFileName, bbox_inches='tight')
 plt.close()
 
