@@ -17,7 +17,7 @@ import datetime
 import random
 from PIL import Image
 from PIL import ImageFont
-from PIL import ImageDraw 
+from PIL import ImageDraw
 
 cameraCaptureIsOn = False
 now = datetime.datetime.now()
@@ -78,6 +78,13 @@ for e in temperatureContent:
 temperatureTimeList = list(reversed(temperatureTimeList))
 temperatureDataList = list(reversed(temperatureDataList))
 
+with open(temperatureFileName, 'r') as file:
+	temperatureContent = file.readlines()
+
+# you may also want to remove whitespace characters like `\n` at the end of each line
+temperatureContent = [x.strip() for x in temperatureContent]
+temperatureContent = reversed(temperatureContent)
+
 fullTemperatureTimeList = []
 fullTemperatureDataList = []
 i = 0
@@ -105,13 +112,9 @@ plt.close()
 plt.plot(fullTemperatureTimeList, fullTemperatureDataList)
 plt.ylabel('Degrees Celsius')
 plt.xlabel('Date')
-
-fig, ax = plt.subplots(1)
-ax.xaxis.grid(False)
-plt.grid()
-
 plt.title('Temperature')
 plt.xticks(rotation=90)
+plt.grid(True)
 plt.savefig(fullTemperatureImageFileName, bbox_inches='tight')
 plt.close()
 
