@@ -16,6 +16,12 @@ using Android.Locations;
 using Android.Runtime;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
+using Sharpen;
+using System.Net.Http;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 
 namespace raspiEyesAndroid
 {
@@ -29,6 +35,12 @@ namespace raspiEyesAndroid
         System.Timers.Timer Timer;
         DateTime LastUpdate;
         TextView infoText;
+        TextView infoText2;
+        TextView infoText3;
+        String LastLocation;
+        String LastTemperature;
+        String LastHumidity;
+        string key = "27OtkDxArEqki7qITqKQbtPgfAtHaWOe";
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -40,33 +52,23 @@ namespace raspiEyesAndroid
             SetSupportActionBar(toolbar);
 
             infoText = FindViewById<TextView>(Resource.Id.textView1);
+            infoText2 = FindViewById<TextView>(Resource.Id.textView2);
+            infoText3 = FindViewById<TextView>(Resource.Id.textView3);
 
             FloatingActionButton fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
             fab.Click += FabOnClick;
 
             this.Timer = new System.Timers.Timer();
             // Timer1.Start();
-#if DEBUG
-            this.Timer.Interval = 1000 * 30; // each 30 seconds
-#else
-            this.Timer.Interval = 1000 * 60 * 30; // each 30 minutes
-#endif
+            this.Timer.Interval = 1000 * 30; // each 30 seconds * 60; // each minute
             this.Timer.Enabled = true;
             //Timer1.Elapsed += OnTimedEvent;
-            this.Timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e) =>
+            Timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e) =>
             {
                 Console.WriteLine("Updating now");
-                this.StartUpdate();
-
-                // this.Timer.Stop();
-                //Delete time since it will no longer be used.
-                //this.Timer.Dispose();
-
+                StartUpdateAsync();
             };
-            Console.WriteLine("Updating now");
             InitializeLocationManager();
-            locationManager.RequestLocationUpdates(locationProvider, 0, 0, this);
-            StartUpdate();
             this.Timer.Start();
         }
 
@@ -84,7 +86,6 @@ namespace raspiEyesAndroid
                 {
                     locationProvider = string.Empty;
                 }
-                this.infoText.Text = "Using {locationProvider}";
             }
         }
 
@@ -116,9 +117,11 @@ namespace raspiEyesAndroid
             {
                 // You already have permission, so copy your files...
                 InitializeLocationManager();
-                StartUpdate();
-                Snackbar.Make(view, "Coordinates Posted to GitHub", Snackbar.LengthLong)
-                    .SetAction("Action", (Android.Views.View.IOnClickListener)null).Show();
+                StartUpdateAsync();
+                Snackbar
+                    .Make(view, "Coordinates Posted to GitHub", Snackbar.LengthLong)
+                    .SetAction("Action", (Android.Views.View.IOnClickListener)null)
+                    .Show();
             }
             else
             {
@@ -128,7 +131,9 @@ namespace raspiEyesAndroid
             if (ActivityCompat.ShouldShowRequestPermissionRationale(this, locationPermission))
             {
                 // Displaying a dialog would make sense, but for an example this works...
-                Toast.MakeText(this, "Will need permission to location", ToastLength.Long).Show();
+                Toast
+                    .MakeText(this, "Will need permission to location", ToastLength.Long)
+                    .Show();
                 return;
             }
         }
@@ -142,7 +147,7 @@ namespace raspiEyesAndroid
                     {
                         // you have permission, you are allowed to read/write to external storage go do it...
                         InitializeLocationManager();
-                        StartUpdate();
+                        StartUpdateAsync();
                     }
                     break;
                 default:
@@ -150,14 +155,14 @@ namespace raspiEyesAndroid
             }
         }
 
-        private void GenerateData(SmbFile file)
+        private async Task GenerateData(SmbFile file)
         {
             try
             {
                 locationManager.RequestLocationUpdates(locationProvider, 0, 0, this);
                 if (currentLocation == null)
                 {
-                    this.infoText.Text = "Location is null";
+                    RunOnUiThread(() => this.infoText.Text = "Location is null");
                     return;
                 }
                 Console.WriteLine($"return? -> {currentLocation}");
@@ -189,7 +194,16 @@ namespace raspiEyesAndroid
                     }
 
                     this.LastUpdate = DateTime.Now;
-                    this.infoText.Text = $"Last Update:{System.Environment.NewLine}{this.LastUpdate}{System.Environment.NewLine}Lat:{System.Environment.NewLine}{Math.Round(currentLocation.Latitude, 4)}{System.Environment.NewLine}Long:{System.Environment.NewLine}{Math.Round(currentLocation.Longitude, 4)}";
+                    this.LastLocation = $"Lat: {Math.Round(currentLocation.Latitude, 2)}{System.Environment.NewLine}Long: {Math.Round(currentLocation.Longitude, 2)}";
+                    var mapquestUrl = $"http://www.mapquestapi.com/geocoding/v1/reverse?key={key}&location={currentLocation.Latitude},{currentLocation.Longitude}&includeRoadMetadata=false&includeNearestIntersection=false&thumbmaps=true";
+                    using (var client = new HttpClient())
+                    {
+                        var result = await client.GetStringAsync(mapquestUrl);
+                        dynamic data = JObject.Parse(result);
+                        string city = data.results[0].locations[0].adminArea5;
+                        string thumbUrl = data.results[0].locations[0].mapUrl;
+                        RunOnUiThread(() => this.infoText3.Text = city);
+                    }
                 }
             }
             catch (Exception)
@@ -198,9 +212,64 @@ namespace raspiEyesAndroid
             }
         }
 
-        private void StartUpdate()
+        private static List<string> TakeLastLines(string text, int count)
         {
-            this.infoText.Text = "Updating now";
+            List<string> lines = new List<string>();
+            Match match = Regex.Match(text, "^.*$", RegexOptions.Multiline | RegexOptions.RightToLeft);
+
+            while (match.Success && lines.Count < count)
+            {
+                lines.Insert(0, match.Value);
+                match = match.NextMatch();
+            }
+
+            return lines;
+        }
+
+        private void CaptureTemperatures(SmbFile file)
+        {
+            try
+            {
+                var temperatures = "";
+
+                Console.WriteLine($"file?-> {file}");
+                if (file != null)
+                {
+                    //Create reading buffer.
+                    using (var memStream = new MemoryStream())
+                    {
+                        //Get readable stream.
+                        using (var readStream = file.GetInputStream())
+                        {
+                            //Get bytes.
+                            ((Stream)readStream).CopyTo(memStream);
+                        }
+                        temperatures = Encoding.UTF8.GetString(memStream.ToArray());
+                        string[] stringSeparators = { "\r\n" };
+                        string[] lines = temperatures.Split(stringSeparators, StringSplitOptions.None);
+                        var lastTemperature = lines.Last(l => l != "");
+                        lastTemperature = lastTemperature.Split(",").Last();
+                        this.LastTemperature = $"{Convert.ToDecimal(lastTemperature).ToString("0.##")}º C";
+                        RunOnUiThread(() => this.infoText2.Text = $"{this.LastTemperature}");
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine($"errot gen data");
+            }
+        }
+
+        private async Task StartUpdateAsync()
+        {
+            RunOnUiThread(() => this.infoText.Text = $"{DateTime.Now.ToString("HH:mm")}");
+            // { System.Environment.NewLine}{this.LastLocation}{System.Environment.NewLine}{this.LastTemperature}";
+
+            if (this.LastLocation != null &&
+                this.LastUpdate.AddMinutes(30) > DateTime.Now)
+            {
+                return;
+            }
 
             //Set Local UDP-Broadcast Port.
             //When using the host name when connecting,
@@ -215,102 +284,78 @@ namespace raspiEyesAndroid
             SharpCifs.Config.SetProperty("jcifs.smb.client.lport", "8137");
             // SharpCifs.Config.SetProperty("jcifs.smb.client.lport", "137");
 
-            //Get local workgroups.
-            var lan = new SmbFile("smb://", "");
+            var ojitos = new SmbFile("smb://192.168.43.108", "");
 
             try
             {
-                var workgroups = lan.ListFiles();
-                foreach (var workgroup in workgroups)
+                //Get shared folders in server.
+                var shares = ojitos.ListFiles();
+                foreach (var share in shares)
                 {
                     try
                     {
-                        var servers = workgroup.ListFiles();
-                        foreach (var server in servers)
+                        if (share.GetName() == "share/")
                         {
                             try
                             {
-                                if (server.GetName() == "ojitos/")
+                                //List items
+                                foreach (SmbFile dir in share.ListFiles())
                                 {
-                                    //Get shared folders in server.
-                                    var shares = server.ListFiles();
-                                    foreach (var share in shares)
+                                    try
                                     {
-                                        try
+                                        if (dir.GetName() == "raspiEyes/")
                                         {
-                                            if (share.GetName() == "share/")
-                                            {
-                                                try
-                                                {
-                                                    //List items
-                                                    foreach (SmbFile dir in share.ListFiles())
-                                                    {
-                                                        try
-                                                        {
-                                                            if (dir.GetName() == "raspiEyes/")
-                                                            {
 
-                                                                try
-                                                                {
-                                                                    //List items
-                                                                    foreach (SmbFile file in dir.ListFiles())
-                                                                    {
-                                                                        try
-                                                                        {
-                                                                            if (file.GetName() == "coordinates.txt")
-                                                                            {
-                                                                                this.GenerateData(file);
-                                                                            }
-                                                                        }
-                                                                        catch (Exception)
-                                                                        {
-                                                                            Console.WriteLine($"Access Denied");
-                                                                        }
-                                                                    }
-                                                                }
-                                                                catch (Exception)
-                                                                {
-                                                                    Console.WriteLine($"Access Denied");
-                                                                }
-                                                            }
-                                                        }
-                                                        catch (Exception)
+                                            try
+                                            {
+                                                //List items
+                                                foreach (SmbFile file in dir.ListFiles())
+                                                {
+                                                    try
+                                                    {
+                                                        if (file.GetName() == "coordinates.txt")
                                                         {
-                                                            Console.WriteLine($"Access Denied");
+                                                            await this.GenerateData(file);
+                                                        }
+                                                        if (file.GetName() == "temperatures.txt")
+                                                        {
+                                                            this.CaptureTemperatures(file);
                                                         }
                                                     }
-
-                                                }
-                                                catch (Exception)
-                                                {
-                                                    Console.WriteLine($"Access Denied");
+                                                    catch (Exception e)
+                                                    {
+                                                        Console.WriteLine($"{e}");
+                                                    }
                                                 }
                                             }
-                                        }
-                                        catch (Exception)
-                                        {
-                                            Console.WriteLine($"Access Denied");
+                                            catch (Exception e)
+                                            {
+                                                Console.WriteLine($"{e}");
+                                            }
                                         }
                                     }
-
+                                    catch (Exception e)
+                                    {
+                                        Console.WriteLine($"{e}");
+                                    }
                                 }
+
                             }
-                            catch (Exception)
+                            catch (Exception e)
                             {
-                                Console.WriteLine($"Access Denied");
+                                Console.WriteLine($"{e}");
                             }
                         }
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        Console.WriteLine($"Access Denied");
+                        Console.WriteLine($"{e}");
                     }
                 }
-
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                Console.WriteLine($"Access Denied");
+                Console.WriteLine($"{e}");
             }
         }
 

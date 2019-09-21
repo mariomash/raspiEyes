@@ -32,9 +32,21 @@
       "frameworks": {
         "monoandroid90": {
           "dependencies": {
+            "Microsoft.CSharp": {
+              "target": "Package",
+              "version": "[4.5.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[12.0.2, )"
+            },
             "SharpCifs.Std": {
               "target": "Package",
               "version": "[0.2.13, )"
+            },
+            "Sharpen.Port": {
+              "target": "Package",
+              "version": "[1.0.0, )"
             },
             "Xamarin.Android.Support.Core.Utils": {
               "target": "Package",
