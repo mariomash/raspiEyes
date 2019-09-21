@@ -17,12 +17,13 @@ import datetime
 import random
 from PIL import Image
 from PIL import ImageFont
-from PIL import ImageDraw 
+from PIL import ImageDraw
 
 cameraCaptureIsOn = False
 now = datetime.datetime.now()
 temperatureFileName = '/share/raspiEyes/temperatures.txt'
 temperatureImageFileName = '/share/raspiEyes/temperatures.png'
+fullTemperatureImageFileName = '/share/raspiEyes/fulltemperatures.png'
 humidityFileName = '/share/raspiEyes/humidities.txt'
 humidityImageFileName = '/share/raspiEyes/humidities.png'
 captureImageFileName = '/share/raspiEyes/capture.jpg'
@@ -48,6 +49,9 @@ sensormodel = Adafruit_DHT.AM2302
 sensorpin = 4
 humidity, temperature = Adafruit_DHT.read_retry(sensormodel, sensorpin)
 
+print(f'current humidity: {humidity}')
+print(f'current temperature: {temperature}')
+
 # humidity = round(humidity, 2)
 # temperature = round(temperature, 2)
 
@@ -61,6 +65,7 @@ with open(temperatureFileName, 'r') as file:
 # you may also want to remove whitespace characters like `\n` at the end of each line
 temperatureContent = [x.strip() for x in temperatureContent]
 temperatureContent = reversed(temperatureContent)
+
 temperatureTimeList = []
 temperatureDataList = []
 i = 0
@@ -68,10 +73,29 @@ for e in temperatureContent:
 	if i < maxDataItems:
 		temperatureTimeList.append(e.split(',')[0])
 		temperatureDataList.append(float(e.split(',')[1]))
-		#temperatureDataList.append(random.random())
 		i = i + 1
+
 temperatureTimeList = list(reversed(temperatureTimeList))
 temperatureDataList = list(reversed(temperatureDataList))
+
+with open(temperatureFileName, 'r') as file:
+	temperatureContent = file.readlines()
+
+# you may also want to remove whitespace characters like `\n` at the end of each line
+temperatureContent = [x.strip() for x in temperatureContent]
+temperatureContent = reversed(temperatureContent)
+
+fullTemperatureTimeList = []
+fullTemperatureDataList = []
+i = 0
+for e in temperatureContent:
+	fullTemperatureTimeList.append(e.split(',')[0])
+	fullTemperatureDataList.append(float(e.split(',')[1]))
+	i = i + 1
+
+fullTemperatureTimeList = list(reversed(fullTemperatureTimeList))
+fullTemperatureDataList = list(reversed(fullTemperatureDataList))
+
 plt.plot(temperatureTimeList, temperatureDataList)
 plt.ylabel('Degrees Celsius')
 plt.xlabel('Date')
@@ -79,6 +103,15 @@ plt.title('Temperature')
 plt.xticks(rotation=90)
 plt.grid(True)
 plt.savefig(temperatureImageFileName, bbox_inches='tight')
+plt.close()
+
+plt.plot(fullTemperatureTimeList, fullTemperatureDataList)
+plt.ylabel('Degrees Celsius')
+plt.xlabel('Date')
+plt.title('Temperature')
+plt.xticks(rotation=90)
+plt.grid(True)
+plt.savefig(fullTemperatureImageFileName, bbox_inches='tight')
 plt.close()
 
 img = Image.open(temperatureImageFileName)
@@ -90,6 +123,16 @@ ImageDraw.Draw(
     (0, 0, 0)  # Color
 )
 img.save(temperatureImageFileName)
+
+img = Image.open(fullTemperatureImageFileName)
+ImageDraw.Draw(
+    img  # Image
+).text(
+    (0, 0),  # Coordinates
+    gitCommitMessage,  # Text
+    (0, 0, 0)  # Color
+)
+img.save(fullTemperatureImageFileName)
 
 # Prepare Humidity File
 with open(humidityFileName, 'a') as file:
@@ -164,10 +207,9 @@ coordinatesLongList = list(reversed(coordinatesLongList))
 # https://www.mapquestapi.com/staticmap/v5/map?key=27OtkDxArEqki7qITqKQbtPgfAtHaWOe&shape&center=58.625555,16.34823&size=1000,1000&type=hyb&locations=58.625555,16.34823&shape=58.625555,16.34823|58.625555,16.3481783333333
 _lat = coordinatesLatList[0]
 _long = coordinatesLongList[0]
-print(f'{_lat},{_long}')
-#print(coordinatesLatList)
+print(f'Current Position: {_lat},{_long}')
 mapUrl = f'https://www.mapquestapi.com/staticmap/v5/map?key=27OtkDxArEqki7qITqKQbtPgfAtHaWOe&shape&size=1000,1000&type=hyb&locations={_lat},{_long}'
-print(mapUrl)
+print(f'Route Map URL: {mapUrl}')
 with open(mapFileName, 'wb') as f:
 	f.write(requests.get(mapUrl).content)
 

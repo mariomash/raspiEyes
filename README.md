@@ -5,6 +5,7 @@
 ![](temperatures.png?raw=true)
 ![](humidities.png?raw=true)
 ![](route.jpg?raw=true)
+![](fulltemperatures.png?raw=true)
 ![](capture.jpg?raw=true)
 ![](exsis.jpeg?raw=true)
 
