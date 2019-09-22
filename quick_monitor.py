@@ -33,14 +33,14 @@ with open(lastHumidityFileName, 'w') as file:
 	file.write(f'{now.strftime("%Y-%m-%d %H:%M")},{humidity}\r\n')
 
 # Let's commit
-def git_push():
-	try:
-		repo = Repo(gitRepoPath)
-		repo.git.add(update=True)
-		repo.index.commit(gitCommitMessage)
-		origin = repo.remote(name='origin')
-		origin.push()
-	except Exception as e:
-		print (e)
+# def git_push():
+#	try:
+#		repo = Repo(gitRepoPath)
+#		repo.git.add(update=True)
+#		repo.index.commit(gitCommitMessage)
+#		origin = repo.remote(name='origin')
+#		origin.push()
+#	except Exception as e:
+#		print (e)
 
-git_push()
+# git_push()

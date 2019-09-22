@@ -265,12 +265,6 @@ namespace raspiEyesAndroid
             RunOnUiThread(() => this.infoText.Text = $"{DateTime.Now.ToString("HH:mm")}");
             // { System.Environment.NewLine}{this.LastLocation}{System.Environment.NewLine}{this.LastTemperature}";
 
-            if (this.LastLocation != null &&
-                this.LastUpdate.AddMinutes(30) > DateTime.Now)
-            {
-                return;
-            }
-
             //Set Local UDP-Broadcast Port.
             //When using the host name when connecting,
             //Change default local port(137) to a value larger than 1024.
@@ -315,7 +309,11 @@ namespace raspiEyesAndroid
                                                     {
                                                         if (file.GetName() == "coordinates.txt")
                                                         {
-                                                            await this.GenerateData(file);
+                                                            if (this.LastLocation == null ||
+                                                                this.LastUpdate.AddMinutes(30) < DateTime.Now)
+                                                            {
+                                                                await this.GenerateData(file);
+                                                            }
                                                         }
                                                         if (file.GetName() == "last_temperature.txt")
                                                         {

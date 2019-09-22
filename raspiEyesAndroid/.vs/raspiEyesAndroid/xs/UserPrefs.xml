@@ -1,20 +1,20 @@
 ﻿<Properties StartupConfiguration="{396B8C99-72EC-46D8-9AEF-6819280B361B}|Default">
   <MonoDevelop.Ide.Workbench ActiveDocument="raspiEyesAndroid/MainActivity.cs">
     <Files>
-      <File FileName="raspiEyesAndroid/MainActivity.cs" Line="307" Column="42" />
+      <File FileName="raspiEyesAndroid/MainActivity.cs" Line="322" Column="54" />
       <File FileName="raspiEyesAndroid/Resources/layout/content_main.xml" />
       <File FileName="raspiEyesAndroid/Resources/layout/activity_main.xml" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" />
-  <MonoDevelop.Ide.ItemProperties.raspiEyesAndroid AndroidDesignerPreferredTheme="AppTheme" AndroidDesignerPreferredDevice="Nexus 4" PreferredExecutionTarget="Android.Android_Accelerated_Oreo" />
+  <MonoDevelop.Ide.ItemProperties.raspiEyesAndroid AndroidDesignerPreferredTheme="AppTheme" AndroidDesignerPreferredDevice="Nexus 4" PreferredExecutionTarget="Android.MA037444" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint file="/Users/mariomash/Desktop/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/MainActivity.cs" relfile="raspiEyesAndroid/MainActivity.cs" line="339" column="1" />
-      <Breakpoint file="/Users/mariomash/Desktop/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/MainActivity.cs" relfile="raspiEyesAndroid/MainActivity.cs" line="358" column="1" />
-      <Breakpoint file="/Users/mariomash/Desktop/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/MainActivity.cs" relfile="raspiEyesAndroid/MainActivity.cs" line="352" column="1" />
-      <Breakpoint file="/Users/mariomash/Desktop/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/MainActivity.cs" relfile="raspiEyesAndroid/MainActivity.cs" line="346" column="1" />
+      <Breakpoint file="/Users/mariomash/Desktop/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/MainActivity.cs" relfile="raspiEyesAndroid/MainActivity.cs" line="337" column="1" />
+      <Breakpoint file="/Users/mariomash/Desktop/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/MainActivity.cs" relfile="raspiEyesAndroid/MainActivity.cs" line="356" column="1" />
+      <Breakpoint file="/Users/mariomash/Desktop/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/MainActivity.cs" relfile="raspiEyesAndroid/MainActivity.cs" line="350" column="1" />
+      <Breakpoint file="/Users/mariomash/Desktop/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/MainActivity.cs" relfile="raspiEyesAndroid/MainActivity.cs" line="344" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations />
