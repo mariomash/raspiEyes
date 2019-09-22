@@ -317,7 +317,7 @@ namespace raspiEyesAndroid
                                                         {
                                                             await this.GenerateData(file);
                                                         }
-                                                        if (file.GetName() == "temperatures.txt")
+                                                        if (file.GetName() == "last_temperature.txt")
                                                         {
                                                             this.CaptureTemperatures(file);
                                                         }
