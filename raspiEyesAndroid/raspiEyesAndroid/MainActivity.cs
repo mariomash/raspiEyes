@@ -247,7 +247,7 @@ namespace raspiEyesAndroid
                         temperatures = Encoding.UTF8.GetString(memStream.ToArray());
                         string[] stringSeparators = { "\r\n" };
                         string[] lines = temperatures.Split(stringSeparators, StringSplitOptions.None);
-                        var lastTemperature = lines.Last(l => l != "");
+                        var lastTemperature = lines.First(l => l != "");
                         lastTemperature = lastTemperature.Split(",").Last();
                         this.LastTemperature = $"{Convert.ToDecimal(lastTemperature).ToString("0.##")}º C";
                         RunOnUiThread(() => this.infoText2.Text = $"{this.LastTemperature}");
