@@ -3,7 +3,10 @@ public class MonoPackageManager_Resources {
 	public static String[] Assemblies = new String[]{
 		/* We need to ensure that "raspiEyesAndroid.dll" comes first in this list. */
 		"raspiEyesAndroid.dll",
+		"Newtonsoft.Json.dll",
 		"SharpCifs.Std.dll",
+		"Sharpen.dll",
+		"SharpZipLib.dll",
 		"Xamarin.Android.Arch.Core.Common.dll",
 		"Xamarin.Android.Arch.Core.Runtime.dll",
 		"Xamarin.Android.Arch.Lifecycle.Common.dll",
