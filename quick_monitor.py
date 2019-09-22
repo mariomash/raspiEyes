@@ -28,9 +28,9 @@ print(f'current temperature: {temperature}')
 
 with open(lastTemperatureFileName, 'w') as file:
 	file.write(f'{now.strftime("%Y-%m-%d %H:%M")},{temperature}\r\n')
-with open(lastTemperatureFileName, 'w') as file:
-	file.write(f'{now.strftime("%Y-%m-%d %H:%M")},{temperature}\r\n')
 
+with open(lastHumidityFileName, 'w') as file:
+	file.write(f'{now.strftime("%Y-%m-%d %H:%M")},{humidity}\r\n')
 
 # Let's commit
 def git_push():
