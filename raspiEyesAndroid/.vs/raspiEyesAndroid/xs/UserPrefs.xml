@@ -2,30 +2,9 @@
   <MonoDevelop.Ide.Workbench ActiveDocument="raspiEyesAndroid/MainActivity.cs">
     <Files>
       <File FileName="raspiEyesAndroid/MainActivity.cs" Line="307" Column="42" />
-      <File FileName="raspiEyesAndroid/Resources/layout/content_main.xml" Line="41" Column="17" />
-      <File FileName="raspiEyesAndroid/Resources/layout/activity_main.xml" Line="2" Column="21" />
+      <File FileName="raspiEyesAndroid/Resources/layout/content_main.xml" />
+      <File FileName="raspiEyesAndroid/Resources/layout/activity_main.xml" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State name="__root__">
-          <Node name="raspiEyesAndroid" expanded="True">
-            <Node name="raspiEyesAndroid" expanded="True">
-              <Node name="References" expanded="True" />
-              <Node name="Packages" expanded="True" />
-              <Node name="Assets" expanded="True" />
-              <Node name="Properties" expanded="True" />
-              <Node name="Resources" expanded="True">
-                <Node name="layout" expanded="True" />
-              </Node>
-              <Node name="MainActivity.cs" selected="True" />
-            </Node>
-          </Node>
-        </State>
-      </Pad>
-      <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State />
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" />
