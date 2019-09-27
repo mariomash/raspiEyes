@@ -661,3 +661,4 @@
 /Users/mariomash/Desktop/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/obj/Debug/stamp/_GenerateJavaStubs.stamp
 /Users/mariomash/Desktop/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/obj/Debug/stamp/_GeneratePackageManagerJava.stamp
 /Users/mariomash/Desktop/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/obj/Debug/stamp/_ResolveLibraryProjectImports.stamp
+/Users/mariomash/Desktop/raspiEyes/raspiEyesAndroid/raspiEyesAndroid/obj/Debug/raspiEyesAndroid.csprojAssemblyReference.cache
