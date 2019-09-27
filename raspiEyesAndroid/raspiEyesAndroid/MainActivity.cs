@@ -117,7 +117,7 @@ namespace raspiEyesAndroid
             {
                 // You already have permission, so copy your files...
                 InitializeLocationManager();
-                StartUpdateAsync();
+                StartUpdateAsync(true);
                 Snackbar
                     .Make(view, "Coordinates Posted to GitHub", Snackbar.LengthLong)
                     .SetAction("Action", (Android.Views.View.IOnClickListener)null)
@@ -147,7 +147,7 @@ namespace raspiEyesAndroid
                     {
                         // you have permission, you are allowed to read/write to external storage go do it...
                         InitializeLocationManager();
-                        StartUpdateAsync();
+                        StartUpdateAsync(true);
                     }
                     break;
                 default:
@@ -200,7 +200,20 @@ namespace raspiEyesAndroid
                     {
                         var result = await client.GetStringAsync(mapquestUrl);
                         dynamic data = JObject.Parse(result);
+                        Console.WriteLine($"{result}");
                         string city = data.results[0].locations[0].adminArea5;
+                        if (city == "")
+                        {
+                            city = data.results[0].locations[0].adminArea4;
+                        }
+                        if (city == "")
+                        {
+                            city = data.results[0].locations[0].adminArea3;
+                        }
+                        if (city == "")
+                        {
+                            city = data.results[0].locations[0].adminArea2;
+                        }
                         string thumbUrl = data.results[0].locations[0].mapUrl;
                         RunOnUiThread(() => this.infoText3.Text = city);
                     }
@@ -260,7 +273,7 @@ namespace raspiEyesAndroid
             }
         }
 
-        private async Task StartUpdateAsync()
+        private async Task StartUpdateAsync(Boolean force = false)
         {
             RunOnUiThread(() => this.infoText.Text = $"{DateTime.Now.ToString("HH:mm")}");
             // { System.Environment.NewLine}{this.LastLocation}{System.Environment.NewLine}{this.LastTemperature}";
@@ -310,7 +323,8 @@ namespace raspiEyesAndroid
                                                         if (file.GetName() == "coordinates.txt")
                                                         {
                                                             if (this.LastLocation == null ||
-                                                                this.LastUpdate.AddMinutes(30) < DateTime.Now)
+                                                                this.LastUpdate.AddMinutes(30) < DateTime.Now ||
+                                                                force == true)
                                                             {
                                                                 await this.GenerateData(file);
                                                             }

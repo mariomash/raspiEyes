@@ -8,5 +8,4 @@
 ._README.md
 raspiEyesAndroid/.vs
 raspiEyesAndroid/raspiEyesAndroid/obj
-raspiEyesAndroid/raspiEyesAndroid/bin/Release
-raspiEyesAndroid/raspiEyesAndroid/bin/Debug
+raspiEyesAndroid/raspiEyesAndroid/bin
