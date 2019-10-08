@@ -224,7 +224,7 @@ ImageDraw.Draw(
 )
 img.save(mapFileName)
 
-routeUrl = f'https://www.mapquestapi.com/staticmap/v5/map?key=27OtkDxArEqki7qITqKQbtPgfAtHaWOe&shape&size=2000,2000&locations={_lat},{_long}&shape='
+routeUrl = f'https://www.mapquestapi.com/staticmap/v5/map?key=27OtkDxArEqki7qITqKQbtPgfAtHaWOe&shape&size=1920,1920&locations={_lat},{_long}&shape='
 i = 0
 for e in coordinatesTimeList:
 	routeUrl = f'{routeUrl}{coordinatesLatList[i]},{coordinatesLongList[i]}|'
