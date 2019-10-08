@@ -37,9 +37,12 @@ namespace raspiEyesAndroid
         TextView infoText;
         TextView infoText2;
         TextView infoText3;
+        TextView infoText4;
         String LastLocation;
         String LastTemperature;
         String LastHumidity;
+        Double totalDistanceInKm;
+        bool isDark = true;
         string key = "27OtkDxArEqki7qITqKQbtPgfAtHaWOe";
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -54,9 +57,13 @@ namespace raspiEyesAndroid
             infoText = FindViewById<TextView>(Resource.Id.textView1);
             infoText2 = FindViewById<TextView>(Resource.Id.textView2);
             infoText3 = FindViewById<TextView>(Resource.Id.textView3);
+            infoText4 = FindViewById<TextView>(Resource.Id.textView4);
 
             FloatingActionButton fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
             fab.Click += FabOnClick;
+
+            FloatingActionButton light = FindViewById<FloatingActionButton>(Resource.Id.light);
+            light.Click += LightOnClick;
 
             this.Timer = new System.Timers.Timer();
             // Timer1.Start();
@@ -104,6 +111,27 @@ namespace raspiEyesAndroid
             }
 
             return base.OnOptionsItemSelected(item);
+        }
+
+        private void LightOnClick(object sender, EventArgs eventArgs)
+        {
+            View view = (View)sender;
+
+            if (isDark == true)
+            {
+                this.infoText.SetTextColor(Android.Graphics.Color.White);
+                this.infoText2.SetTextColor(Android.Graphics.Color.White);
+                this.infoText3.SetTextColor(Android.Graphics.Color.White);
+                this.infoText4.SetTextColor(Android.Graphics.Color.White);
+                this.isDark = false;
+            } else
+            {
+                this.infoText.SetTextColor(Android.Graphics.Color.DarkGray);
+                this.infoText2.SetTextColor(Android.Graphics.Color.DarkGray);
+                this.infoText3.SetTextColor(Android.Graphics.Color.DarkGray);
+                this.infoText4.SetTextColor(Android.Graphics.Color.DarkGray);
+                this.isDark = true;
+            }
         }
 
         private void FabOnClick(object sender, EventArgs eventArgs)
@@ -185,7 +213,7 @@ namespace raspiEyesAndroid
                     }
 
                     coordinates = $"{coordinates}{System.Environment.NewLine}{DateTime.Now:yyyy/MM/dd HH:mm},{currentLocation.Latitude.ToString()},{currentLocation.Longitude.ToString()}";
-                    Console.WriteLine($"coordinates?-> {coordinates}");
+                    // Console.WriteLine($"coordinates?-> {coordinates}");
                     //Get writable stream.
                     using (var writeStream = file.GetOutputStream())
                     {
@@ -195,6 +223,46 @@ namespace raspiEyesAndroid
 
                     this.LastUpdate = DateTime.Now;
                     this.LastLocation = $"Lat: {Math.Round(currentLocation.Latitude, 2)}{System.Environment.NewLine}Long: {Math.Round(currentLocation.Longitude, 2)}";
+
+                    var totalDistance = 0.0;
+
+                    var coordinatesList = coordinates.Split(
+                        new[] { System.Environment.NewLine },
+                        StringSplitOptions.None);
+
+                    for (var i = 1; i < coordinatesList.Length; i++)
+                    {
+                        try
+                        {
+                            var thisLat = Convert.ToDouble(coordinatesList[i].Split(',')[1]);
+                            var thisLong = Convert.ToDouble(coordinatesList[i].Split(',')[2]);
+                            var prevLat = Convert.ToDouble(coordinatesList[i - 1].Split(',')[1]);
+                            var prevLong = Convert.ToDouble(coordinatesList[i - 1].Split(',')[2]);
+                            var distance = new Coordinates(thisLat, thisLong)
+                                .DistanceTo(new Coordinates(prevLat, prevLong), UnitOfLength.Kilometers);
+
+                            totalDistance = totalDistance + distance;
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex);
+                        }
+                    }
+
+                    this.totalDistanceInKm = totalDistance;
+
+                    RunOnUiThread(() =>
+                    {
+                        try
+                        {
+                            this.infoText4.Text = $"{Math.Round(this.totalDistanceInKm, 1)}km";
+                        }
+                        catch (Exception)
+                        {
+                            Console.WriteLine($"errot gen data");
+                        }
+                    });
+
                     var mapquestUrl = $"http://www.mapquestapi.com/geocoding/v1/reverse?key={key}&location={currentLocation.Latitude},{currentLocation.Longitude}&includeRoadMetadata=false&includeNearestIntersection=false&thumbmaps=true";
                     using (var client = new HttpClient())
                     {
@@ -427,4 +495,60 @@ namespace raspiEyesAndroid
         }
     }
 
+    public class Coordinates
+    {
+        public double Latitude { get; private set; }
+        public double Longitude { get; private set; }
+
+        public Coordinates(double latitude, double longitude)
+        {
+            Latitude = latitude;
+            Longitude = longitude;
+        }
+    }
+
+    public static class CoordinatesDistanceExtensions
+    {
+        public static double DistanceTo(this Coordinates baseCoordinates, Coordinates targetCoordinates)
+        {
+            return DistanceTo(baseCoordinates, targetCoordinates, UnitOfLength.Kilometers);
+        }
+
+        public static double DistanceTo(this Coordinates baseCoordinates, Coordinates targetCoordinates, UnitOfLength unitOfLength)
+        {
+            var baseRad = Math.PI * baseCoordinates.Latitude / 180;
+            var targetRad = Math.PI * targetCoordinates.Latitude / 180;
+            var theta = baseCoordinates.Longitude - targetCoordinates.Longitude;
+            var thetaRad = Math.PI * theta / 180;
+
+            double dist =
+                Math.Sin(baseRad) * Math.Sin(targetRad) + Math.Cos(baseRad) *
+                Math.Cos(targetRad) * Math.Cos(thetaRad);
+            dist = Math.Acos(dist);
+
+            dist = dist * 180 / Math.PI;
+            dist = dist * 60 * 1.1515;
+
+            return unitOfLength.ConvertFromMiles(dist);
+        }
+    }
+
+    public class UnitOfLength
+    {
+        public static UnitOfLength Kilometers = new UnitOfLength(1.609344);
+        public static UnitOfLength NauticalMiles = new UnitOfLength(0.8684);
+        public static UnitOfLength Miles = new UnitOfLength(1);
+
+        private readonly double _fromMilesFactor;
+
+        private UnitOfLength(double fromMilesFactor)
+        {
+            _fromMilesFactor = fromMilesFactor;
+        }
+
+        public double ConvertFromMiles(double input)
+        {
+            return input * _fromMilesFactor;
+        }
+    }
 }
