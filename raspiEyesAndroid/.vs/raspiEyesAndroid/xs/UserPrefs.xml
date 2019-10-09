@@ -2,33 +2,15 @@
   <MonoDevelop.Ide.Workbench ActiveDocument="raspiEyesAndroid/MainActivity.cs">
     <Files>
       <File FileName="raspiEyesAndroid/MainActivity.cs" Line="135" Column="10" />
-      <File FileName="raspiEyesAndroid/Resources/layout/content_main.xml" Line="34" Column="5" />
-      <File FileName="raspiEyesAndroid/Resources/layout/activity_main.xml" Line="30" Column="10" />
+      <File FileName="raspiEyesAndroid/Resources/layout/content_main.xml" />
+      <File FileName="raspiEyesAndroid/Resources/layout/activity_main.xml" />
       <File FileName="raspiEyesAndroid/Resources/values/styles.xml" />
-      <File FileName="raspiEyesAndroid/Resources/values/strings.xml" Line="5" Column="13" />
+      <File FileName="raspiEyesAndroid/Resources/values/strings.xml" />
       <File FileName="raspiEyesAndroid/Resources/menu/menu_main.xml" />
       <File FileName="raspiEyesAndroid/Properties/AndroidManifest.xml" />
       <File FileName="raspiEyesAndroid/Resources/Resource.designer.cs" />
       <File FileName="raspiEyesAndroid/Properties/AssemblyInfo.cs" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State name="__root__">
-          <Node name="raspiEyesAndroid" expanded="True">
-            <Node name="raspiEyesAndroid" expanded="True">
-              <Node name="Properties" expanded="True" />
-              <Node name="Resources" expanded="True">
-                <Node name="layout" expanded="True" />
-                <Node name="menu" expanded="True" />
-                <Node name="values" expanded="True">
-                  <Node name="strings.xml" selected="True" />
-                </Node>
-              </Node>
-            </Node>
-          </Node>
-        </State>
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" />

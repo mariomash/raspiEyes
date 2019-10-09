@@ -50,6 +50,17 @@
 		android:background="#ff000000"
 		android:textColor="#ff555555"
 		android:text="..."
-		android:layout_alignParentBottom="true"
 		android:layout_below="@id/textView3" />
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:id="@+id/textView5"
+		android:textSize="45sp"
+		android:layout_centerHorizontal="true"
+		android:textAlignment="center"
+		android:background="#ff000000"
+		android:textColor="#ff555555"
+		android:text="..."
+		android:layout_alignParentBottom="true"
+		android:layout_below="@id/textView4" />
 </RelativeLayout>

@@ -25,7 +25,7 @@ using System.Threading.Tasks;
 
 namespace raspiEyesAndroid
 {
-    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
+    [Activity(Label = " ", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
     public class MainActivity : AppCompatActivity, ILocationListener
     {
 
@@ -34,19 +34,45 @@ namespace raspiEyesAndroid
         string locationProvider;
         System.Timers.Timer Timer;
         DateTime LastUpdate;
+        FloatingActionButton fab;
+        FloatingActionButton light;
         TextView infoText;
         TextView infoText2;
         TextView infoText3;
         TextView infoText4;
+        TextView infoText5;
         String LastLocation;
         String LastTemperature;
         String LastHumidity;
         Double totalDistanceInKm;
         bool isDark = true;
-        string key = "27OtkDxArEqki7qITqKQbtPgfAtHaWOe";
+        readonly string key = "27OtkDxArEqki7qITqKQbtPgfAtHaWOe";
+        readonly string weatherApiKey = "9e36d94558a3f4fbff58e966a7500c81";
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            this.Window.AddFlags(WindowManagerFlags.Fullscreen | WindowManagerFlags.TurnScreenOn);
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.Lollipop)
+            {
+                var stBarHeight = typeof(AppCompatActivity).GetField("statusBarHeight", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+                if (stBarHeight == null)
+                {
+                    stBarHeight = typeof(AppCompatActivity).GetField("_statusBarHeight", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+                }
+                stBarHeight?.SetValue(this, 0);
+            }
+
+            //====================================
+            int uiOptions = (int)Window.DecorView.SystemUiVisibility;
+
+            uiOptions |= (int)SystemUiFlags.LowProfile;
+            uiOptions |= (int)SystemUiFlags.Fullscreen;
+            uiOptions |= (int)SystemUiFlags.HideNavigation;
+            uiOptions |= (int)SystemUiFlags.ImmersiveSticky;
+
+            Window.DecorView.SystemUiVisibility = (StatusBarVisibility)uiOptions;
+            //====================================
+
             base.OnCreate(savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             SetContentView(Resource.Layout.activity_main);
@@ -58,11 +84,12 @@ namespace raspiEyesAndroid
             infoText2 = FindViewById<TextView>(Resource.Id.textView2);
             infoText3 = FindViewById<TextView>(Resource.Id.textView3);
             infoText4 = FindViewById<TextView>(Resource.Id.textView4);
+            infoText5 = FindViewById<TextView>(Resource.Id.textView5);
 
-            FloatingActionButton fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
+            fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
             fab.Click += FabOnClick;
 
-            FloatingActionButton light = FindViewById<FloatingActionButton>(Resource.Id.light);
+            light = FindViewById<FloatingActionButton>(Resource.Id.light);
             light.Click += LightOnClick;
 
             this.Timer = new System.Timers.Timer();
@@ -76,6 +103,7 @@ namespace raspiEyesAndroid
                 StartUpdateAsync();
             };
             InitializeLocationManager();
+            this.changeDarkness();
             this.Timer.Start();
         }
 
@@ -113,25 +141,36 @@ namespace raspiEyesAndroid
             return base.OnOptionsItemSelected(item);
         }
 
-        private void LightOnClick(object sender, EventArgs eventArgs)
+        public void changeDarkness()
         {
-            View view = (View)sender;
-
             if (isDark == true)
             {
                 this.infoText.SetTextColor(Android.Graphics.Color.White);
                 this.infoText2.SetTextColor(Android.Graphics.Color.White);
                 this.infoText3.SetTextColor(Android.Graphics.Color.White);
                 this.infoText4.SetTextColor(Android.Graphics.Color.White);
+                this.infoText5.SetTextColor(Android.Graphics.Color.White);
+                this.fab.Alpha = 1;
+                this.light.Alpha = 1;
                 this.isDark = false;
-            } else
+            }
+            else
             {
                 this.infoText.SetTextColor(Android.Graphics.Color.DarkGray);
                 this.infoText2.SetTextColor(Android.Graphics.Color.DarkGray);
                 this.infoText3.SetTextColor(Android.Graphics.Color.DarkGray);
                 this.infoText4.SetTextColor(Android.Graphics.Color.DarkGray);
+                this.infoText5.SetTextColor(Android.Graphics.Color.DarkGray);
+                this.fab.Alpha = 0.2f;
+                this.light.Alpha = 0.2f;
                 this.isDark = true;
             }
+        }
+
+        private void LightOnClick(object sender, EventArgs eventArgs)
+        {
+            View view = (View)sender;
+            this.changeDarkness();
         }
 
         private void FabOnClick(object sender, EventArgs eventArgs)
@@ -263,27 +302,53 @@ namespace raspiEyesAndroid
                         }
                     });
 
-                    var mapquestUrl = $"http://www.mapquestapi.com/geocoding/v1/reverse?key={key}&location={currentLocation.Latitude},{currentLocation.Longitude}&includeRoadMetadata=false&includeNearestIntersection=false&thumbmaps=true";
-                    using (var client = new HttpClient())
+                    try
                     {
-                        var result = await client.GetStringAsync(mapquestUrl);
-                        dynamic data = JObject.Parse(result);
-                        Console.WriteLine($"{result}");
-                        string city = data.results[0].locations[0].adminArea5;
-                        if (city == "")
+                        var mapquestUrl = $"http://www.mapquestapi.com/geocoding/v1/reverse?key={key}&location={currentLocation.Latitude},{currentLocation.Longitude}&includeRoadMetadata=false&includeNearestIntersection=false&thumbmaps=true";
+                        using (var client = new HttpClient())
                         {
-                            city = data.results[0].locations[0].adminArea4;
+                            var result = await client.GetStringAsync(mapquestUrl);
+                            dynamic data = JObject.Parse(result);
+                            Console.WriteLine($"{result}");
+                            string city = data.results[0].locations[0].adminArea5;
+                            if (city == "")
+                            {
+                                city = data.results[0].locations[0].adminArea4;
+                            }
+                            if (city == "")
+                            {
+                                city = data.results[0].locations[0].adminArea3;
+                            }
+                            if (city == "")
+                            {
+                                city = data.results[0].locations[0].adminArea2;
+                            }
+                            string thumbUrl = data.results[0].locations[0].mapUrl;
+                            RunOnUiThread(() => this.infoText3.Text = city);
                         }
-                        if (city == "")
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                    }
+
+                    try
+                    {
+                        var forecastUrl = $"https://api.openweathermap.org/data/2.5/forecast?lat={currentLocation.Latitude}&lon={currentLocation.Longitude}&units=metric&cnt=1&APPID={weatherApiKey}";
+                        using (var client = new HttpClient())
                         {
-                            city = data.results[0].locations[0].adminArea3;
+                            var result = await client.GetStringAsync(forecastUrl);
+                            dynamic data = JObject.Parse(result);
+                            Console.WriteLine($"{result}");
+                            decimal min = data.list[0].main.temp_min;
+                            decimal max = data.list[0].main.temp_max;
+                            string weather = data.list[0].weather[0].main;
+                            RunOnUiThread(() => this.infoText5.Text = $"{weather}{System.Environment.NewLine}{min}º C / {max}º C");
                         }
-                        if (city == "")
-                        {
-                            city = data.results[0].locations[0].adminArea2;
-                        }
-                        string thumbUrl = data.results[0].locations[0].mapUrl;
-                        RunOnUiThread(() => this.infoText3.Text = city);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
                     }
                 }
             }
