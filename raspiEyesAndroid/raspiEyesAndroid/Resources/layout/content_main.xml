@@ -11,34 +11,56 @@
 	<TextView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text=""
+		android:text="..."
 		android:id="@+id/textView1"
 		android:textSize="@dimen/abc_text_size_display_4_material"
 		android:layout_centerHorizontal="true"
 		android:textAlignment="center"
-		android:background="@color/background_material_dark"
-		android:textColor="@color/primary_text_default_material_dark" />
+		android:background="#ff000000"
+		android:textColor="#ff555555" />
 	<TextView
 		android:layout_below="@id/textView1"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text=""
+		android:text="..."
 		android:id="@+id/textView2"
 		android:textSize="80sp"
 		android:layout_centerHorizontal="true"
 		android:textAlignment="center"
-		android:background="@color/background_material_dark"
-		android:textColor="@color/primary_text_default_material_dark" />
+		android:background="#ff000000"
+		android:textColor="#ff555555" />
 	<TextView
+		android:layout_below="@id/textView2"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:id="@+id/textView3"
 		android:textSize="@dimen/abc_text_size_display_3_material"
 		android:layout_centerHorizontal="true"
 		android:textAlignment="center"
-		android:background="@color/background_material_dark"
-		android:textColor="@color/primary_text_default_material_dark"
-		android:text=""
+		android:background="#ff000000"
+		android:textColor="#ff555555"
+		android:text="..." />
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:id="@+id/textView4"
+		android:textSize="@dimen/abc_text_size_display_3_material"
+		android:layout_centerHorizontal="true"
+		android:textAlignment="center"
+		android:background="#ff000000"
+		android:textColor="#ff555555"
+		android:text="..."
+		android:layout_below="@id/textView3" />
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:id="@+id/textView5"
+		android:textSize="45sp"
+		android:layout_centerHorizontal="true"
+		android:textAlignment="center"
+		android:background="#ff000000"
+		android:textColor="#ff555555"
+		android:text="..."
 		android:layout_alignParentBottom="true"
-		android:layout_below="@id/textView2" />
+		android:layout_below="@id/textView4" />
 </RelativeLayout>

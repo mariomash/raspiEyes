@@ -25,7 +25,7 @@ using System.Threading.Tasks;
 
 namespace raspiEyesAndroid
 {
-    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
+    [Activity(Label = " ", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
     public class MainActivity : AppCompatActivity, ILocationListener
     {
 
@@ -34,16 +34,45 @@ namespace raspiEyesAndroid
         string locationProvider;
         System.Timers.Timer Timer;
         DateTime LastUpdate;
+        FloatingActionButton fab;
+        FloatingActionButton light;
         TextView infoText;
         TextView infoText2;
         TextView infoText3;
+        TextView infoText4;
+        TextView infoText5;
         String LastLocation;
         String LastTemperature;
         String LastHumidity;
-        string key = "27OtkDxArEqki7qITqKQbtPgfAtHaWOe";
+        Double totalDistanceInKm;
+        bool isDark = true;
+        readonly string key = "27OtkDxArEqki7qITqKQbtPgfAtHaWOe";
+        readonly string weatherApiKey = "9e36d94558a3f4fbff58e966a7500c81";
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            this.Window.AddFlags(WindowManagerFlags.Fullscreen | WindowManagerFlags.TurnScreenOn);
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.Lollipop)
+            {
+                var stBarHeight = typeof(AppCompatActivity).GetField("statusBarHeight", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+                if (stBarHeight == null)
+                {
+                    stBarHeight = typeof(AppCompatActivity).GetField("_statusBarHeight", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+                }
+                stBarHeight?.SetValue(this, 0);
+            }
+
+            //====================================
+            int uiOptions = (int)Window.DecorView.SystemUiVisibility;
+
+            uiOptions |= (int)SystemUiFlags.LowProfile;
+            uiOptions |= (int)SystemUiFlags.Fullscreen;
+            uiOptions |= (int)SystemUiFlags.HideNavigation;
+            uiOptions |= (int)SystemUiFlags.ImmersiveSticky;
+
+            Window.DecorView.SystemUiVisibility = (StatusBarVisibility)uiOptions;
+            //====================================
+
             base.OnCreate(savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             SetContentView(Resource.Layout.activity_main);
@@ -54,9 +83,14 @@ namespace raspiEyesAndroid
             infoText = FindViewById<TextView>(Resource.Id.textView1);
             infoText2 = FindViewById<TextView>(Resource.Id.textView2);
             infoText3 = FindViewById<TextView>(Resource.Id.textView3);
+            infoText4 = FindViewById<TextView>(Resource.Id.textView4);
+            infoText5 = FindViewById<TextView>(Resource.Id.textView5);
 
-            FloatingActionButton fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
+            fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
             fab.Click += FabOnClick;
+
+            light = FindViewById<FloatingActionButton>(Resource.Id.light);
+            light.Click += LightOnClick;
 
             this.Timer = new System.Timers.Timer();
             // Timer1.Start();
@@ -69,6 +103,7 @@ namespace raspiEyesAndroid
                 StartUpdateAsync();
             };
             InitializeLocationManager();
+            this.changeDarkness();
             this.Timer.Start();
         }
 
@@ -104,6 +139,38 @@ namespace raspiEyesAndroid
             }
 
             return base.OnOptionsItemSelected(item);
+        }
+
+        public void changeDarkness()
+        {
+            if (isDark == true)
+            {
+                this.infoText.SetTextColor(Android.Graphics.Color.White);
+                this.infoText2.SetTextColor(Android.Graphics.Color.White);
+                this.infoText3.SetTextColor(Android.Graphics.Color.White);
+                this.infoText4.SetTextColor(Android.Graphics.Color.White);
+                this.infoText5.SetTextColor(Android.Graphics.Color.White);
+                this.fab.Alpha = 1;
+                this.light.Alpha = 1;
+                this.isDark = false;
+            }
+            else
+            {
+                this.infoText.SetTextColor(Android.Graphics.Color.DarkGray);
+                this.infoText2.SetTextColor(Android.Graphics.Color.DarkGray);
+                this.infoText3.SetTextColor(Android.Graphics.Color.DarkGray);
+                this.infoText4.SetTextColor(Android.Graphics.Color.DarkGray);
+                this.infoText5.SetTextColor(Android.Graphics.Color.DarkGray);
+                this.fab.Alpha = 0.2f;
+                this.light.Alpha = 0.2f;
+                this.isDark = true;
+            }
+        }
+
+        private void LightOnClick(object sender, EventArgs eventArgs)
+        {
+            View view = (View)sender;
+            this.changeDarkness();
         }
 
         private void FabOnClick(object sender, EventArgs eventArgs)
@@ -185,7 +252,7 @@ namespace raspiEyesAndroid
                     }
 
                     coordinates = $"{coordinates}{System.Environment.NewLine}{DateTime.Now:yyyy/MM/dd HH:mm},{currentLocation.Latitude.ToString()},{currentLocation.Longitude.ToString()}";
-                    Console.WriteLine($"coordinates?-> {coordinates}");
+                    // Console.WriteLine($"coordinates?-> {coordinates}");
                     //Get writable stream.
                     using (var writeStream = file.GetOutputStream())
                     {
@@ -195,27 +262,93 @@ namespace raspiEyesAndroid
 
                     this.LastUpdate = DateTime.Now;
                     this.LastLocation = $"Lat: {Math.Round(currentLocation.Latitude, 2)}{System.Environment.NewLine}Long: {Math.Round(currentLocation.Longitude, 2)}";
-                    var mapquestUrl = $"http://www.mapquestapi.com/geocoding/v1/reverse?key={key}&location={currentLocation.Latitude},{currentLocation.Longitude}&includeRoadMetadata=false&includeNearestIntersection=false&thumbmaps=true";
-                    using (var client = new HttpClient())
+
+                    var totalDistance = 0.0;
+
+                    var coordinatesList = coordinates.Split(
+                        new[] { System.Environment.NewLine },
+                        StringSplitOptions.None);
+
+                    for (var i = 1; i < coordinatesList.Length; i++)
                     {
-                        var result = await client.GetStringAsync(mapquestUrl);
-                        dynamic data = JObject.Parse(result);
-                        Console.WriteLine($"{result}");
-                        string city = data.results[0].locations[0].adminArea5;
-                        if (city == "")
+                        try
                         {
-                            city = data.results[0].locations[0].adminArea4;
+                            var thisLat = Convert.ToDouble(coordinatesList[i].Split(',')[1]);
+                            var thisLong = Convert.ToDouble(coordinatesList[i].Split(',')[2]);
+                            var prevLat = Convert.ToDouble(coordinatesList[i - 1].Split(',')[1]);
+                            var prevLong = Convert.ToDouble(coordinatesList[i - 1].Split(',')[2]);
+                            var distance = new Coordinates(thisLat, thisLong)
+                                .DistanceTo(new Coordinates(prevLat, prevLong), UnitOfLength.Kilometers);
+
+                            totalDistance = totalDistance + distance;
                         }
-                        if (city == "")
+                        catch (Exception ex)
                         {
-                            city = data.results[0].locations[0].adminArea3;
+                            Console.WriteLine(ex);
                         }
-                        if (city == "")
+                    }
+
+                    this.totalDistanceInKm = totalDistance;
+
+                    RunOnUiThread(() =>
+                    {
+                        try
                         {
-                            city = data.results[0].locations[0].adminArea2;
+                            this.infoText4.Text = $"{Math.Round(this.totalDistanceInKm, 1)}km";
                         }
-                        string thumbUrl = data.results[0].locations[0].mapUrl;
-                        RunOnUiThread(() => this.infoText3.Text = city);
+                        catch (Exception)
+                        {
+                            Console.WriteLine($"errot gen data");
+                        }
+                    });
+
+                    try
+                    {
+                        var mapquestUrl = $"http://www.mapquestapi.com/geocoding/v1/reverse?key={key}&location={currentLocation.Latitude},{currentLocation.Longitude}&includeRoadMetadata=false&includeNearestIntersection=false&thumbmaps=true";
+                        using (var client = new HttpClient())
+                        {
+                            var result = await client.GetStringAsync(mapquestUrl);
+                            dynamic data = JObject.Parse(result);
+                            Console.WriteLine($"{result}");
+                            string city = data.results[0].locations[0].adminArea5;
+                            if (city == "")
+                            {
+                                city = data.results[0].locations[0].adminArea4;
+                            }
+                            if (city == "")
+                            {
+                                city = data.results[0].locations[0].adminArea3;
+                            }
+                            if (city == "")
+                            {
+                                city = data.results[0].locations[0].adminArea2;
+                            }
+                            string thumbUrl = data.results[0].locations[0].mapUrl;
+                            RunOnUiThread(() => this.infoText3.Text = city);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                    }
+
+                    try
+                    {
+                        var forecastUrl = $"https://api.openweathermap.org/data/2.5/forecast?lat={currentLocation.Latitude}&lon={currentLocation.Longitude}&units=metric&cnt=1&APPID={weatherApiKey}";
+                        using (var client = new HttpClient())
+                        {
+                            var result = await client.GetStringAsync(forecastUrl);
+                            dynamic data = JObject.Parse(result);
+                            Console.WriteLine($"{result}");
+                            decimal min = data.list[0].main.temp_min;
+                            decimal max = data.list[0].main.temp_max;
+                            string weather = data.list[0].weather[0].main;
+                            RunOnUiThread(() => this.infoText5.Text = $"{weather}{System.Environment.NewLine}{min}º C / {max}º C");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
                     }
                 }
             }
@@ -427,4 +560,60 @@ namespace raspiEyesAndroid
         }
     }
 
+    public class Coordinates
+    {
+        public double Latitude { get; private set; }
+        public double Longitude { get; private set; }
+
+        public Coordinates(double latitude, double longitude)
+        {
+            Latitude = latitude;
+            Longitude = longitude;
+        }
+    }
+
+    public static class CoordinatesDistanceExtensions
+    {
+        public static double DistanceTo(this Coordinates baseCoordinates, Coordinates targetCoordinates)
+        {
+            return DistanceTo(baseCoordinates, targetCoordinates, UnitOfLength.Kilometers);
+        }
+
+        public static double DistanceTo(this Coordinates baseCoordinates, Coordinates targetCoordinates, UnitOfLength unitOfLength)
+        {
+            var baseRad = Math.PI * baseCoordinates.Latitude / 180;
+            var targetRad = Math.PI * targetCoordinates.Latitude / 180;
+            var theta = baseCoordinates.Longitude - targetCoordinates.Longitude;
+            var thetaRad = Math.PI * theta / 180;
+
+            double dist =
+                Math.Sin(baseRad) * Math.Sin(targetRad) + Math.Cos(baseRad) *
+                Math.Cos(targetRad) * Math.Cos(thetaRad);
+            dist = Math.Acos(dist);
+
+            dist = dist * 180 / Math.PI;
+            dist = dist * 60 * 1.1515;
+
+            return unitOfLength.ConvertFromMiles(dist);
+        }
+    }
+
+    public class UnitOfLength
+    {
+        public static UnitOfLength Kilometers = new UnitOfLength(1.609344);
+        public static UnitOfLength NauticalMiles = new UnitOfLength(0.8684);
+        public static UnitOfLength Miles = new UnitOfLength(1);
+
+        private readonly double _fromMilesFactor;
+
+        private UnitOfLength(double fromMilesFactor)
+        {
+            _fromMilesFactor = fromMilesFactor;
+        }
+
+        public double ConvertFromMiles(double input)
+        {
+            return input * _fromMilesFactor;
+        }
+    }
 }
