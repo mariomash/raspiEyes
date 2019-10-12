@@ -222,7 +222,7 @@ for e in coordinatesContent:
 				_lat = newLat
 				_long = newLong
 
-			i = i + 1
+		i = i + 1
 
 coordinatesTimeList = list(reversed(coordinatesTimeList))
 coordinatesLatList = list(reversed(coordinatesLatList))
