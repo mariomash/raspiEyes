@@ -18,6 +18,7 @@ import random
 from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
+from math import sin, cos, sqrt, atan2, radians
 
 cameraCaptureIsOn = False
 now = datetime.datetime.now()
@@ -192,12 +193,35 @@ for e in coordinatesContent:
 		# print(e)
 		newLat = float(e.split(',')[1])
 		newLong = float(e.split(',')[2])
+
 		if newLat != _lat or newLong != _long:
-			coordinatesTimeList.append(e.split(',')[0])
-			coordinatesLatList.append(newLat)
-			coordinatesLongList.append(newLong)
-			_lat = newLat
-			_long = newLong
+			# approximate radius of earth in km
+			R = 6373.0
+
+			lat1 = radians(_lat)
+			lon1 = radians(_long)
+			lat2 = radians(newLat)
+			lon2 = radians(16.9251681)
+
+			dlon = lon2 - lon1
+			dlat = lat2 - lat1
+
+			a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+			c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+			distance = R * c
+
+			print("Distance:", distance)
+#			print("Should be:", 278.546, "km")
+
+			if distance > 50:
+
+				coordinatesTimeList.append(e.split(',')[0])
+				coordinatesLatList.append(newLat)
+				coordinatesLongList.append(newLong)
+				_lat = newLat
+				_long = newLong
+
 			i = i + 1
 
 coordinatesTimeList = list(reversed(coordinatesTimeList))
