@@ -15,6 +15,7 @@ import Adafruit_DHT
 import requests
 import datetime
 import random
+import os.path
 from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
@@ -34,6 +35,7 @@ mapFileName = '/share/raspiEyes/map.jpg'
 routeFileName = '/share/raspiEyes/route.jpg'
 coordinatesFileName = '/share/raspiEyes/coordinates.txt'
 maxDataItems = 30
+minDistance = 80
 
 # pir = MotionSensor(4)
 if cameraCaptureIsOn:
@@ -201,7 +203,7 @@ for e in coordinatesContent:
 			lat1 = radians(_lat)
 			lon1 = radians(_long)
 			lat2 = radians(newLat)
-			lon2 = radians(16.9251681)
+			lon2 = radians(newLong)
 
 			dlon = lon2 - lon1
 			dlat = lat2 - lat1
@@ -214,7 +216,7 @@ for e in coordinatesContent:
 			print("Distance:", distance)
 #			print("Should be:", 278.546, "km")
 
-			if distance > 50:
+			if distance > minDistance:
 
 				coordinatesTimeList.append(e.split(',')[0])
 				coordinatesLatList.append(newLat)
@@ -255,6 +257,9 @@ for e in coordinatesTimeList:
 	i = i + 1
 
 print(routeUrl)
+if os.path.isfile(routeFileName):
+    os.remove(routeFileName)
+
 with open(routeFileName, 'wb') as f:
 	f.write(requests.get(routeUrl).content)
 
