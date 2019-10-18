@@ -35,7 +35,7 @@ mapFileName = '/share/raspiEyes/map.jpg'
 routeFileName = '/share/raspiEyes/route.jpg'
 coordinatesFileName = '/share/raspiEyes/coordinates.txt'
 maxDataItems = 30
-minDistance = 80
+minDistance = 30
 
 # pir = MotionSensor(4)
 if cameraCaptureIsOn:
