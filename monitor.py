@@ -39,12 +39,12 @@ minDistance = 30
 
 # pir = MotionSensor(4)
 if cameraCaptureIsOn:
-	camera = PiCamera()
-	camera.resolution = (1920, 1080)
-	camera.start_preview()
-	sleep(5)
-	camera.capture(captureImageFileName)
-	camera.stop_preview()
+    camera = PiCamera()
+    camera.resolution = (1920, 1080)
+    camera.start_preview()
+    sleep(5)
+    camera.capture(captureImageFileName)
+    camera.stop_preview()
 
 # Attempt to get a sensor reading. The read_retry method will
 # retry up to 15 times, waiting 2 seconds between attempts
@@ -60,10 +60,10 @@ print(f'current temperature: {temperature}')
 
 # Prepare temperature file
 with open(temperatureFileName, 'a') as file:
-	file.write(f'{now.strftime("%Y-%m-%d %H:%M")},{temperature}\r\n')
+    file.write(f'{now.strftime("%Y-%m-%d %H:%M")},{temperature}\r\n')
 
 with open(temperatureFileName, 'r') as file:
-	temperatureContent = file.readlines()
+    temperatureContent = file.readlines()
 
 # you may also want to remove whitespace characters like `\n` at the end of each line
 temperatureContent = [x.strip() for x in temperatureContent]
@@ -73,16 +73,16 @@ temperatureTimeList = []
 temperatureDataList = []
 i = 0
 for e in temperatureContent:
-	if i < maxDataItems:
-		temperatureTimeList.append(e.split(',')[0])
-		temperatureDataList.append(float(e.split(',')[1]))
-		i = i + 1
+    if i < maxDataItems:
+        temperatureTimeList.append(e.split(',')[0])
+        temperatureDataList.append(float(e.split(',')[1]))
+        i = i + 1
 
 temperatureTimeList = list(reversed(temperatureTimeList))
 temperatureDataList = list(reversed(temperatureDataList))
 
 with open(temperatureFileName, 'r') as file:
-	temperatureContent = file.readlines()
+    temperatureContent = file.readlines()
 
 # you may also want to remove whitespace characters like `\n` at the end of each line
 temperatureContent = [x.strip() for x in temperatureContent]
@@ -92,9 +92,9 @@ fullTemperatureTimeList = []
 fullTemperatureDataList = []
 i = 0
 for e in temperatureContent:
-	fullTemperatureTimeList.append(e.split(',')[0])
-	fullTemperatureDataList.append(float(e.split(',')[1]))
-	i = i + 1
+    fullTemperatureTimeList.append(e.split(',')[0])
+    fullTemperatureDataList.append(float(e.split(',')[1]))
+    i = i + 1
 
 fullTemperatureTimeList = list(reversed(fullTemperatureTimeList))
 fullTemperatureDataList = list(reversed(fullTemperatureDataList))
@@ -139,10 +139,10 @@ img.save(fullTemperatureImageFileName)
 
 # Prepare Humidity File
 with open(humidityFileName, 'a') as file:
-	file.write(f'{now.strftime("%Y-%m-%d %H:%M")},{humidity}\r\n')
+    file.write(f'{now.strftime("%Y-%m-%d %H:%M")},{humidity}\r\n')
 
 with open(humidityFileName, 'r') as file:
-	humidityContent = file.readlines()
+    humidityContent = file.readlines()
 
 # you may also want to remove whitespace characters like `\n` at the end of each line
 humidityContent = [x.strip() for x in humidityContent]
@@ -151,12 +151,12 @@ humidityTimeList = []
 humidityDataList = []
 i = 0
 for e in humidityContent:
-	if i < maxDataItems:
-		humidityTimeList.append(e.split(',')[0])
-		humidityDataList.append(float(e.split(',')[1]))
-		i = i + 1
+    if i < maxDataItems:
+        humidityTimeList.append(e.split(',')[0])
+        humidityDataList.append(float(e.split(',')[1]))
+        i = i + 1
 
-#print(humidityDataList)
+# print(humidityDataList)
 humidityTimeList = list(reversed(humidityTimeList))
 humidityDataList = list(reversed(humidityDataList))
 plt.plot(humidityTimeList, humidityDataList)
@@ -179,7 +179,7 @@ ImageDraw.Draw(
 img.save(humidityImageFileName)
 
 with open(coordinatesFileName, 'r') as file:
-	coordinatesContent = file.readlines()
+    coordinatesContent = file.readlines()
 
 # you may also want to remove whitespace characters like `\n` at the end of each line
 coordinatesContent = [x.strip() for x in coordinatesContent]
@@ -191,40 +191,47 @@ i = 0
 _lat = 0
 _long = 0
 for e in coordinatesContent:
-	if e != '':
-		# print(e)
-		newLat = float(e.split(',')[1])
-		newLong = float(e.split(',')[2])
+    if e != '':
+        # print(e)
+        newLat = _lat
+        newLong = _long
 
-		if newLat != _lat or newLong != _long:
-			# approximate radius of earth in km
-			R = 6373.0
+        try:
+            newLat = float(e.split(',')[1])
+            newLong = float(e.split(',')[2])
 
-			lat1 = radians(_lat)
-			lon1 = radians(_long)
-			lat2 = radians(newLat)
-			lon2 = radians(newLong)
+            if newLat != _lat or newLong != _long:
+                # approximate radius of earth in km
+                R = 6373.0
 
-			dlon = lon2 - lon1
-			dlat = lat2 - lat1
+                lat1 = radians(_lat)
+                lon1 = radians(_long)
+                lat2 = radians(newLat)
+                lon2 = radians(newLong)
 
-			a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
-			c = 2 * atan2(sqrt(a), sqrt(1 - a))
+                dlon = lon2 - lon1
+                dlat = lat2 - lat1
 
-			distance = R * c
+                a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+                c = 2 * atan2(sqrt(a), sqrt(1 - a))
 
-			print("Distance:", distance)
-#			print("Should be:", 278.546, "km")
+                distance = R * c
 
-			if distance > minDistance:
+                print("Distance:", distance)
+    #			print("Should be:", 278.546, "km")
 
-				coordinatesTimeList.append(e.split(',')[0])
-				coordinatesLatList.append(newLat)
-				coordinatesLongList.append(newLong)
-				_lat = newLat
-				_long = newLong
+                if distance > minDistance:
 
-		i = i + 1
+                    coordinatesTimeList.append(e.split(',')[0])
+                    coordinatesLatList.append(newLat)
+                    coordinatesLongList.append(newLong)
+                    _lat = newLat
+                    _long = newLong
+
+        except Exception as e:
+            print (e)
+
+        i = i + 1
 
 coordinatesTimeList = list(reversed(coordinatesTimeList))
 coordinatesLatList = list(reversed(coordinatesLatList))
@@ -237,7 +244,7 @@ print(f'Current Position: {_lat},{_long}')
 mapUrl = f'https://www.mapquestapi.com/staticmap/v5/map?key=27OtkDxArEqki7qITqKQbtPgfAtHaWOe&shape&size=1000,1000&type=hyb&locations={_lat},{_long}'
 print(f'Route Map URL: {mapUrl}')
 with open(mapFileName, 'wb') as f:
-	f.write(requests.get(mapUrl).content)
+    f.write(requests.get(mapUrl).content)
 
 
 img = Image.open(mapFileName)
@@ -253,15 +260,15 @@ img.save(mapFileName)
 routeUrl = f'https://www.mapquestapi.com/staticmap/v5/map?key=27OtkDxArEqki7qITqKQbtPgfAtHaWOe&shape&size=1920,1920&locations={_lat},{_long}&shape='
 i = 0
 for e in coordinatesTimeList:
-	routeUrl = f'{routeUrl}{coordinatesLatList[i]},{coordinatesLongList[i]}|'
-	i = i + 1
+    routeUrl = f'{routeUrl}{coordinatesLatList[i]},{coordinatesLongList[i]}|'
+    i = i + 1
 
 print(routeUrl)
 if os.path.isfile(routeFileName):
     os.remove(routeFileName)
 
 with open(routeFileName, 'wb') as f:
-	f.write(requests.get(routeUrl).content)
+    f.write(requests.get(routeUrl).content)
 
 
 img = Image.open(routeFileName)
@@ -277,14 +284,15 @@ img.save(routeFileName)
 
 # Let's commit
 def git_push():
-	try:
-		repo = Repo(gitRepoPath)
-		repo.git.add(update=True)
-		repo.index.commit(gitCommitMessage)
-		origin = repo.remote(name='origin')
-		origin.push()
-	except Exception as e:
-		print (e)
+    try:
+        repo = Repo(gitRepoPath)
+        repo.git.add(update=True)
+        repo.index.commit(gitCommitMessage)
+        origin = repo.remote(name='origin')
+        origin.push()
+    except Exception as e:
+        print (e)
+
 
 git_push()
 
@@ -292,8 +300,7 @@ git_push()
 # abort and log message to ThingSpeak
 thingspeak_key = '3PTEOQ651EZUJOAC'
 if humidity is None or temperature is None:
-    f = requests.post('https://api.thingspeak.com/update.json',
-                      data={'api_key': thingspeak_key, 'status': 'failed to get reading'})
+    f = requests.post('https://api.thingspeak.com/update.json', data={'api_key': thingspeak_key, 'status': 'failed to get reading'})
 
 # Otherwise, check if temperature is above threshold,
 # and if so, activate Energenie socket for cooling fan
@@ -302,13 +309,12 @@ else:
     #	tempthreshold = 28
 
     #	if temperature > tempthreshold:
-                # Activate cooling fans
+        # Activate cooling fans
     #		f = Energenie(fansocket, initial_value=True)
 
     #	else:
-                # Deactivate cooling fans
+        # Deactivate cooling fans
     #		f = Energenie(fansocket, initial_value=False)
 
     # Send the data to Thingspeak
-    r = requests.post('https://api.thingspeak.com/update.json',
-                      data={'api_key': thingspeak_key, 'field1': temperature, 'field2': humidity})
+    r = requests.post('https://api.thingspeak.com/update.json', data={'api_key': thingspeak_key, 'field1': temperature, 'field2': humidity})
